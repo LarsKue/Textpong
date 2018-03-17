@@ -1,11 +1,6 @@
 __pycache__
-cats blender plugin_updater
-cats_updater
 .idea
 *.pyc
 .cache
 tmp
-*.blend
-*.blend1
-tests/armatures/*.png
 .coverage
