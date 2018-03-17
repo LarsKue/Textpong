@@ -5,22 +5,34 @@
 import pygame as pg
 from pygame.locals import *
 
+SCREEN_WIDTH = 400
+SCREEN_HEIGHT = 400
+WHITE = (0, 0, 0)
+
 pg.init()
-width, height = 640, 480
-screen = pg.display.set_mode((width, height))
+pg.display.set_caption('TextPong')
+
+screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pg.time.Clock()
 
 player = pg.image.load("resources/Player.jpg")
 
-# loop for as long as exit code is 1
-while 1:
-    # fill the screen with black before drawing anything
-    screen.fill(0)
-    # draw the player at the given position
-    screen.blit(player, (100, 100))
-    # update the screen
-    pg.display.update()
+running = True
+
+# loop for as long as running is true
+while running:
     for event in pg.event.get():
+        print(event)
         # checking if the player presses the close window button (X at top right)
         if event.type == pg.QUIT:
             pg.quit()
             exit(0)
+
+    # fill the screen with black before drawing anything
+    screen.fill(WHITE)
+    # draw the player at the given position
+    screen.blit(player, (100, 100))
+    # update the screen
+    pg.display.update()
+
+    clock.tick(60)
