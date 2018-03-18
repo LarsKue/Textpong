@@ -13,7 +13,7 @@ class Ball:
 
     def __init__(self, pos):
         self.pos = [pos[0], pos[1]]
-        self.speed = 860
+        self.speed = 1800  # 860
         self.vel = [1, 1]
         self.colliding = False
 

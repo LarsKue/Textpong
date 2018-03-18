@@ -10,8 +10,8 @@ from player import Player
 from ball import Ball
 
 # window and general game settings
-screen_width = 1280
-screen_height = 720
+screen_width = 1920
+screen_height = 1080
 # causes lag if above ~ 300, default: 144
 tickrate = 144
 # default: 720
@@ -20,7 +20,7 @@ box_size = 30
 black = (0, 0, 0)
 white = (255, 255, 255)
 # Maximum concurrent balls, set 0 for no limit
-max_balls = 300
+max_balls = 500
 
 player_img_path = "resources/BouncePads/default.png"
 ball_img_path = "resources/Balls/default.png"
@@ -29,7 +29,9 @@ font_path = "resources/Fonts/block_merged.ttf"
 pg.init()
 pg.display.set_caption("Pong")
 
-screen = pg.display.set_mode((screen_width, screen_height))
+# screen = pg.display.set_mode((screen_width, screen_height))
+screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
+
 clock = pg.time.Clock()
 
 # checking player model size
@@ -168,11 +170,8 @@ def handle_collision(ball, ball_rect, p_rect):
 
     clipping_rect = pg.Rect.clip(ball_rect, p_rect)
 
-    if clipping_rect.width < clipping_rect.height:
+    if clipping_rect.width <= clipping_rect.height:
         ball.get_vel()[0] = - ball.get_vel()[0]
-    elif clipping_rect.width == clipping_rect.height:
-        ball.get_vel()[0] = - ball.get_vel()[0]
-        ball.get_vel()[1] = - ball.get_vel()[1]
     else:
         ball.get_vel()[1] = - ball.get_vel()[1]
 
