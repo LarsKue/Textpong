@@ -15,7 +15,7 @@ class Ball:
         self.pos = [pos[0], pos[1]]
         self.speed = 860
         self.vel = [1, 1]
-        self.last_collision = 0
+        self.colliding = False
 
         self.set_random_vel()
 
@@ -34,11 +34,11 @@ class Ball:
     def get_speed(self):
         return self.speed
 
-    def set_last_collision(self, last_collision):
-        self.last_collision = last_collision
+    def set_colliding(self, colliding):
+        self.colliding = colliding
 
-    def get_last_collision(self):
-        return self.last_collision
+    def is_colliding(self):
+        return self.colliding
 
     def set_random_vel(self):
         x = random.uniform(0.35, 0.9)

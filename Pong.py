@@ -6,7 +6,6 @@ Description: Pong Game created as an exercise.
 
 import pygame as pg
 import utils
-import time
 from player import Player
 from ball import Ball
 
@@ -20,6 +19,8 @@ player_speed = 720
 box_size = 30
 black = (0, 0, 0)
 white = (255, 255, 255)
+# Maximum concurrent balls, set 0 for no limit
+max_balls = 300
 
 player_img_path = "resources/BouncePads/default.png"
 ball_img_path = "resources/Balls/default.png"
@@ -36,19 +37,22 @@ p_width, p_height = utils.get_image_size(player_img_path)
 b_width, b_height = utils.get_image_size(ball_img_path)
 
 p1 = Player("Lars", True, [20, (screen_height - p_height) / 2])
-p2 = Player("Felipperinerinerinerinerinerinerino der übelste dude of Doomness ( ͡° ͜ʖ ͡°)", True, [screen_width - 20 - p_width, (screen_height - p_height) / 2])
+p2 = Player("Felipperinerinerino", True, [screen_width - 20 - p_width, (screen_height - p_height) / 2])
 
 balls_list = []
-# maximum number of balls, 0 for no limit
-max_balls = 150
 
-pg.font.init()
 font_size = 40
 font = pg.font.Font(font_path, font_size)
 
 score_p1 = font.render("0", False, white)
 score_p2 = font.render("0", False, white)
 score_minus = font.render("-", False, white)
+
+font_size = 20
+font2 = pg.font.Font(font_path, font_size)
+
+name_p1 = font2.render("", False, white)
+name_p2 = font2.render("", False, white)
 
 ball_startpos = [(screen_width - b_width) / 2, (screen_height - b_height) / 2]
 ball = Ball(ball_startpos)
@@ -78,6 +82,11 @@ def loop():
         score_p1 = font.render(str(p1.score), False, white)
         score_p2 = font.render(str(p2.score), False, white)
 
+        # Update names
+        global name_p1, name_p2
+        name_p1 = font2.render(p1.name, False, white)
+        name_p2 = font2.render(p2.name, False, white)
+
         # Rendering the game
         # Make background black
         screen.fill(black)
@@ -94,6 +103,10 @@ def loop():
         screen.blit(score_p1, (screen_width / 2 - 20 - score_p1.get_rect().width, 3))
         screen.blit(score_p2, (screen_width / 2 + 20, 3))
         screen.blit(score_minus, (screen_width / 2 - score_minus.get_rect().width / 2, 3))
+
+        # Render player names
+        screen.blit(name_p1, (3, 3))
+        screen.blit(name_p2, (screen_width - name_p2.get_rect().width - 3, 3))
 
         # update the screen
         pg.display.update()
@@ -145,9 +158,12 @@ def check_collision(ball, p1, p2):
     elif pg.Rect.colliderect(ball_rect, p2_rect):
         handle_collision(ball, ball_rect, p2_rect)
 
+    else:
+        ball.set_colliding(False)
+
 
 def handle_collision(ball, ball_rect, p_rect):
-    if (time.time() - ball.get_last_collision()) < (1.2 / ball.get_speed()):
+    if ball.is_colliding():
         return
 
     clipping_rect = pg.Rect.clip(ball_rect, p_rect)
@@ -162,7 +178,7 @@ def handle_collision(ball, ball_rect, p_rect):
 
     ball_positioning(ball)
 
-    ball.set_last_collision(time.time())
+    ball.set_colliding(True)
 
 
 
