@@ -34,6 +34,7 @@ p1 = Player("Lars", True, [20, (screen_height - p_height) / 2])
 p2 = Player("Felipperinerinerinerinerinerinerino der übelste dude of Doomness ( ͡° ͜ʖ ͡°)", True, [screen_width - 20 - p_width, (screen_height - p_height) / 2])
 
 balls_list = []
+max_balls = 30
 
 pg.font.init()
 font_size = 25
@@ -98,12 +99,14 @@ def ball_positioning(ball):
         p2.score += 1
         ball.set_pos(ball_startpos)
         ball.set_random_vel()
-        balls_list.append(Ball(ball_startpos))
+        if len(balls_list) < max_balls:
+            balls_list.append(Ball(ball_startpos))
     if ball.get_pos()[0] >= screen_width:
         p1.score += 1
         ball.set_pos(ball_startpos)
         ball.set_random_vel()
-        balls_list.append(Ball(ball_startpos))
+        if len(balls_list) < max_balls:
+            balls_list.append(Ball(ball_startpos))
 
 
 def check_collision(ball, p1, p2):
