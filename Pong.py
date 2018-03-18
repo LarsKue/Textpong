@@ -39,7 +39,7 @@ p_width, p_height = utils.get_image_size(player_img_path)
 b_width, b_height = utils.get_image_size(ball_img_path)
 
 p1 = Player("Lars", True, [20, (screen_height - p_height) / 2])
-p2 = Player("Felipperinerinerino", True, [screen_width - 20 - p_width, (screen_height - p_height) / 2])
+p2 = Player("Felipper, aka 1 dude", True, [screen_width - 20 - p_width, (screen_height - p_height) / 2])
 
 balls_list = []
 

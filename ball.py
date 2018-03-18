@@ -13,7 +13,8 @@ class Ball:
 
     def __init__(self, pos):
         self.pos = [pos[0], pos[1]]
-        self.speed = 1800  # 860
+        # default: 860
+        self.speed = 860
         self.vel = [1, 1]
         self.colliding = False
 
@@ -41,6 +42,7 @@ class Ball:
         return self.colliding
 
     def set_random_vel(self):
+        # default: 0.35, 0.9
         x = random.uniform(0.35, 0.9)
         y = np.sqrt(1 - x ** 2)
 
