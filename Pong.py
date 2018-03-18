@@ -6,6 +6,7 @@ Description: Pong Game created as an exercise.
 
 import pygame as pg
 import utils
+import time
 from player import Player
 from ball import Ball
 
@@ -101,18 +102,22 @@ def check_collision(ball, p1, p2):
 
 
 def handle_collision(ball, ball_rect, p_rect):
+    if (time.time() - ball.get_last_collision()) < (1.2 / ball.get_speed()):
+        return
+
     clipping_rect = pg.Rect.clip(ball_rect, p_rect)
 
     if clipping_rect.width < clipping_rect.height:
         ball.get_vel()[0] = - ball.get_vel()[0]
-        ball_positioning(ball)
     elif clipping_rect.width == clipping_rect.height:
         ball.get_vel()[0] = - ball.get_vel()[0]
         ball.get_vel()[1] = - ball.get_vel()[1]
-        ball_positioning(ball)
     else:
         ball.get_vel()[1] = - ball.get_vel()[1]
-        ball_positioning(ball)
+
+    ball_positioning(ball)
+
+    ball.set_last_collision(time.time())
 
 
 

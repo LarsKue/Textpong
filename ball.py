@@ -35,6 +35,12 @@ class Ball:
     def get_speed(self):
         return self.speed
 
+    def set_last_collision(self, last_collision):
+        self.last_collision = last_collision
+
+    def get_last_collision(self):
+        return self.last_collision
+
     def set_random_vel(self):
         x = random.uniform(0.3, 0.7)
         y = np.sqrt(1 - x ** 2)
