@@ -7,16 +7,13 @@ Description: Defines the player object and common properties
 
 
 class Player:
-    name = "Digga aldah"
-    size = 1
-    human = True
-    keys = [False, False]
-    pos = [0, 0]
 
     def __init__(self, name, human, pos):
         self.name = name
         self.human = human
         self.pos = pos
+        self.keys = [False, False]
+        self.size = 1
 
     def set_name(self, name):
         self.name = name

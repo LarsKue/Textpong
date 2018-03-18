@@ -8,6 +8,7 @@ import pygame as pg
 import utils
 from player import Player
 
+# window and general game settings
 screen_width = 1280
 screen_height = 720
 box_size = 30
@@ -28,7 +29,6 @@ p_width, p_height = utils.get_image_size("resources/BouncePadSmall.png")
 
 p1 = Player("Lars", True, [20, (screen_height - p_width) / 2])
 p2 = Player("Felipperinerinerinerinerinerinerino der übelste dude of Doomness ( ͡° ͜ʖ ͡°)", True, [screen_width - 20 - p_width, (screen_height - p_width) / 2])
-# p2 = Player("AI", False)
 
 player_im = pg.image.load("resources/BouncePadSmall.png")
 
@@ -49,15 +49,17 @@ def loop():
         screen.blit(player_im, p2.get_pos())
         # update the screen
         pg.display.update()
-
+        # game update rate
         clock.tick(144)
 
 
 def positioning(player):
+    # moving the player up or down
     if player.get_keys()[0]:
         player.get_pos()[1] -= 5
     if player.get_keys()[1]:
         player.get_pos()[1] += 5
+    # keeping the player in the window
     if player.get_pos()[1] < 0 + box_size:
         player.get_pos()[1] = 0 + box_size
     if player.get_pos()[1] > (screen_height - p_height - box_size):
