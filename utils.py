@@ -1,7 +1,9 @@
-# utils.py
-# Scripted by: Philipp Koehler, Lars Kuehmichel
-# subclass of Pong.py
-# common utilities and functions
+"""
+utils.py
+Subclass of Pong.py
+Scripted by: Philipp Koehler, Lars Kuehmichel
+Description: Common utilities and functions
+"""
 
 
 # checking dimensions of an image (e.g. the player's model)
