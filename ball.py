@@ -21,7 +21,6 @@ class Ball:
 
     def set_pos(self, pos):
         self.pos = [pos[0], pos[1]]
-        print(pos)
 
     def get_pos(self):
         return self.pos
@@ -50,6 +49,5 @@ class Ball:
         if random.randint(0, 1) == 0:
             y = -y
 
-        print([x, y])
 
         self.vel = [x, y]

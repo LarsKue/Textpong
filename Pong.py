@@ -68,7 +68,8 @@ def loop():
         for balls in balls_list:
             screen.blit(ball_im, balls.get_pos())
         score_screen = font.render(str(p1.score) + " - " + str(p2.score), False, white)
-        screen.blit(score_screen, ((screen_height - font_size), screen_width / 2))
+        score_size = score_screen.get_rect()
+        screen.blit(score_screen, ((screen_width - score_size.width) / 2, (screen_height - score_size.height - box_size)))
         # update the screen
         pg.display.update()
         # game update rate
@@ -97,12 +98,12 @@ def ball_positioning(ball):
         p2.score += 1
         ball.set_pos(ball_startpos)
         ball.set_random_vel()
-        # balls_list.append(Ball(ball_startpos))
+        balls_list.append(Ball(ball_startpos))
     if ball.get_pos()[0] >= screen_width:
         p1.score += 1
         ball.set_pos(ball_startpos)
         ball.set_random_vel()
-        # balls_list.append(Ball(ball_startpos))
+        balls_list.append(Ball(ball_startpos))
 
 
 def check_collision(ball, p1, p2):
