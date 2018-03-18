@@ -33,8 +33,16 @@ b_width, b_height = utils.get_image_size(ball_img_path)
 p1 = Player("Lars", True, [20, (screen_height - p_height) / 2])
 p2 = Player("Felipperinerinerinerinerinerinerino der übelste dude of Doomness ( ͡° ͜ʖ ͡°)", True, [screen_width - 20 - p_width, (screen_height - p_height) / 2])
 
+balls_list = []
+
+pg.font.init()
+font_size = 25
+font = pg.font.SysFont("Comic Sans MS", font_size)
+score_screen = font.render("0 - 0", False, white)
+
 ball_startpos = [(screen_width - b_width) / 2, (screen_height - b_height) / 2]
 ball = Ball(ball_startpos)
+balls_list.append(ball)
 
 player_im = pg.image.load(player_img_path)
 ball_im = pg.image.load(ball_img_path)
@@ -49,14 +57,18 @@ def loop():
         key_listener.keychecks(p1, p2)
         positioning(p1)
         positioning(p2)
-        ball_positioning(ball)
-        check_collision(ball, p1, p2)
+        for balls in balls_list:
+            ball_positioning(balls)
+            check_collision(balls, p1, p2)
         # fill the screen with black before drawing anything
         screen.fill(black)
         # drawing players at the given positions
         screen.blit(player_im, p1.get_pos())
         screen.blit(player_im, p2.get_pos())
-        screen.blit(ball_im, ball.get_pos())
+        for balls in balls_list:
+            screen.blit(ball_im, balls.get_pos())
+        score_screen = font.render(str(p1.score) + " - " + str(p2.score), False, white)
+        screen.blit(score_screen, ((screen_height - font_size), screen_width / 2))
         # update the screen
         pg.display.update()
         # game update rate
@@ -81,9 +93,16 @@ def ball_positioning(ball):
     ball.get_pos()[1] += ball.get_vel()[1] * ball.get_speed()
     if ball.get_pos()[1] < 0 or ball.get_pos()[1] > (screen_height - b_height):
         ball.get_vel()[1] = - ball.get_vel()[1]
-    if ball.get_pos()[0] <= 0 or ball.get_pos()[0] >= screen_width:
+    if ball.get_pos()[0] <= 0:
+        p2.score += 1
         ball.set_pos(ball_startpos)
         ball.set_random_vel()
+        # balls_list.append(Ball(ball_startpos))
+    if ball.get_pos()[0] >= screen_width:
+        p1.score += 1
+        ball.set_pos(ball_startpos)
+        ball.set_random_vel()
+        # balls_list.append(Ball(ball_startpos))
 
 
 def check_collision(ball, p1, p2):

@@ -13,7 +13,7 @@ class Ball:
 
     def __init__(self, pos):
         self.pos = [pos[0], pos[1]]
-        self.speed = 2
+        self.speed = 6
         self.vel = [1, 1]
         self.last_collision = 0
 
@@ -42,7 +42,7 @@ class Ball:
         return self.last_collision
 
     def set_random_vel(self):
-        x = random.uniform(0.3, 0.7)
+        x = random.uniform(0.35, 0.9)
         y = np.sqrt(1 - x ** 2)
 
         if random.randint(0, 1) == 0:

@@ -14,6 +14,7 @@ class Player:
         self.pos = pos
         self.keys = [False, False]
         self.size = 1
+        self.score = 0
 
     def set_name(self, name):
         self.name = name
