@@ -32,8 +32,8 @@ clock = pg.time.Clock()
 p_width, p_height = utils.get_image_size(player_img_path)
 b_width, b_height = utils.get_image_size(ball_img_path)
 
-p1 = Player("Lars", True, [20, (screen_height - p_width) / 2])
-p2 = Player("Felipperinerinerinerinerinerinerino der übelste dude of Doomness ( ͡° ͜ʖ ͡°)", True, [screen_width - 20 - p_width, (screen_height - p_width) / 2])
+p1 = Player("Lars", True, [20, (screen_height - p_height) / 2])
+p2 = Player("Felipperinerinerinerinerinerinerino der übelste dude of Doomness ( ͡° ͜ʖ ͡°)", True, [screen_width - 20 - p_width, (screen_height - p_height) / 2])
 
 ball_startpos = [(screen_width - b_width) / 2, (screen_height - b_height) / 2]
 ball = Ball(ball_startpos)
@@ -95,6 +95,7 @@ def check_collision(ball, p1, p2):
 
     if pg.Rect.colliderect(ball_rect, p1_rect) or pg.Rect.colliderect(ball_rect, p2_rect):
         ball.get_vel()[0] = - ball.get_vel()[0]
+        ball_positioning(ball)
 
 
 
