@@ -19,6 +19,7 @@ white = (255, 255, 255)
 
 player_img_path = "resources/BouncePads/default.png"
 ball_img_path = "resources/Balls/default.png"
+font_path = "resources/Fonts/block_merged.ttf"
 
 pg.init()
 pg.display.set_caption("Pong")
@@ -37,9 +38,12 @@ balls_list = []
 max_balls = 30
 
 pg.font.init()
-font_size = 25
-font = pg.font.SysFont("Comic Sans MS", font_size)
-score_screen = font.render("0 - 0", False, white)
+font_size = 40
+font = pg.font.Font(font_path, font_size)
+
+score_p1 = font.render("0", False, white)
+score_p2 = font.render("0", False, white)
+score_minus = font.render("-", False, white)
 
 ball_startpos = [(screen_width - b_width) / 2, (screen_height - b_height) / 2]
 ball = Ball(ball_startpos)
@@ -56,23 +60,39 @@ def loop():
     # loop for as long as running is true
     while running:
         key_listener.keychecks(p1, p2)
+
+        # Positions and collisions
         positioning(p1)
         positioning(p2)
-        for balls in balls_list:
-            ball_positioning(balls)
-            check_collision(balls, p1, p2)
-        # fill the screen with black before drawing anything
+        for ball in balls_list:
+            ball_positioning(ball)
+            check_collision(ball, p1, p2)
+
+        # Update score
+        global score_p1, score_p2
+        score_p1 = font.render(str(p1.score), False, white)
+        score_p2 = font.render(str(p2.score), False, white)
+
+        # Rendering the game
+        # Make background black
         screen.fill(black)
-        # drawing players at the given positions
+
+        # Render player at position
         screen.blit(player_im, p1.get_pos())
         screen.blit(player_im, p2.get_pos())
-        for balls in balls_list:
-            screen.blit(ball_im, balls.get_pos())
-        score_screen = font.render(str(p1.score) + " - " + str(p2.score), False, white)
-        score_size = score_screen.get_rect()
-        screen.blit(score_screen, ((screen_width - score_size.width) / 2, (screen_height - score_size.height - box_size)))
+
+        # Render balls
+        for ball in balls_list:
+            screen.blit(ball_im, ball.get_pos())
+
+        # Render score
+        screen.blit(score_p1, (screen_width / 2 - 20 - score_p1.get_rect().width, 3))
+        screen.blit(score_p2, (screen_width / 2 + 20, 3))
+        screen.blit(score_minus, (screen_width / 2 - score_minus.get_rect().width / 2, 3))
+
         # update the screen
         pg.display.update()
+
         # game update rate
         clock.tick(144)
 
