@@ -11,8 +11,8 @@ from player import Player
 from ball import Ball
 
 # window and general game settings
-screen_width = 1920
-screen_height = 1080
+screen_width = 600
+screen_height = 600
 fullscreen = False
 # causes lag if above ~ 300, default: 144
 tickrate = 144
@@ -86,29 +86,33 @@ def game_intro():
     pg.time.delay(2500)
     # default: -225
     fade = -255
+    wait = 0
 
     while intro:
         if key_listener.introchecks():
             menu_loop()
             return
+
         screen.fill(white)
         title = font.render("Pong", False, black)
         title.set_alpha(255 - abs(fade))
         title_rect = title.get_rect()
         title_rect.center = ((screen_width / 2), (screen_height / 2))
         screen.blit(title, title_rect)
-        if fade == 0:
-            for delay in range(200):
-                if not key_listener.introchecks():
-                    intro = False
-                    break
-                pg.time.delay(10)
+
         pg.time.delay(1)
         pg.display.update()
-        fade += 1
+
+        if fade == 0 and wait <= 200:
+            wait += 1
+        else:
+            fade += 1
+
         if fade > 255:
             menu_loop()
             return
+
+        clock.tick(tickrate)
 
 
 def menu_loop():
@@ -254,16 +258,24 @@ def game_loop():
 
 def pause_menu():
     pg.mouse.set_visible(True)
+
+    background = pg.Surface([screen_width, screen_height])
+    background.fill((0, 0, 0))
+    background.set_alpha(220)
+    screen.blit(background, [0, 0])
+    fade = 220
+
     pause = True
     while pause:
+        print(background.get_alpha(), "1")
         if key_listener.pausechecks():
+            print(background.get_alpha(), "2")
             game_loop()
             return
 
+
+
         # Make background transparent
-        background = pg.Surface([screen_width, screen_height])
-        background.set_alpha(100)
-        screen.blit(background, [0, 0])
 
         menutitle = font.render("PAUSE", False, white)
         menutitle_rect = menutitle.get_rect()
@@ -352,8 +364,9 @@ def handle_collision(ball, ball_rect, p_rect):
 
 
 
-game_intro()
-menu_loop()
+#game_intro()
+#menu_loop()
+game_loop()
 
 
 
