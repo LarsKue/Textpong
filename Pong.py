@@ -35,7 +35,8 @@ b_width, b_height = utils.get_image_size(ball_img_path)
 p1 = Player("Lars", True, [20, (screen_height - p_width) / 2])
 p2 = Player("Felipperinerinerinerinerinerinerino der übelste dude of Doomness ( ͡° ͜ʖ ͡°)", True, [screen_width - 20 - p_width, (screen_height - p_width) / 2])
 
-ball = Ball([(screen_width - b_width) / 2, (screen_height - b_height) / 2])
+ball_startpos = [(screen_width - b_width) / 2, (screen_height - b_height) / 2]
+ball = Ball(ball_startpos)
 
 player_im = pg.image.load(player_img_path)
 ball_im = pg.image.load(ball_img_path)
@@ -79,6 +80,11 @@ def positioning(player):
 def ball_positioning(ball):
     ball.get_pos()[0] += ball.get_vel()[0]
     ball.get_pos()[1] += ball.get_vel()[1]
+    if ball.get_pos()[1] < 0 or ball.get_pos()[1] > (screen_height - b_height):
+        ball.get_vel()[1] = - ball.get_vel()[1]
+    if ball.get_pos()[0] <= 0 or ball.get_pos()[0] >= screen_width:
+        print("debug")
+        ball.set_pos(ball_startpos)
 
 
 loop()
