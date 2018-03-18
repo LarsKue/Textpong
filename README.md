@@ -1,2 +1,2 @@
 # Textpong
-DU NUDEL
+selba nudel xd
