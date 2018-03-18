@@ -10,6 +10,10 @@ class Ball:
 
     def __init__(self, pos):
         self.pos = pos
+        self.vel = [1, 1]
 
     def get_pos(self):
         return self.pos
+
+    def get_vel(self):
+        return self.vel

@@ -50,6 +50,7 @@ def loop():
         key_listener.keychecks(p1, p2)
         positioning(p1)
         positioning(p2)
+        ball_positioning(ball)
         # fill the screen with black before drawing anything
         screen.fill(black)
         # drawing players at the given positions
@@ -73,6 +74,11 @@ def positioning(player):
         player.get_pos()[1] = 0 + box_size
     if player.get_pos()[1] > (screen_height - p_height - box_size):
         player.get_pos()[1] = screen_height - p_height - box_size
+
+
+def ball_positioning(ball):
+    ball.get_pos()[0] += ball.vel()[0]
+    ball.get_pos()[1] += ball.vel()[1]
 
 
 loop()
