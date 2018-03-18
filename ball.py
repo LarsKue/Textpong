@@ -13,7 +13,7 @@ class Ball:
 
     def __init__(self, pos):
         self.pos = [pos[0], pos[1]]
-        self.speed = 2
+        self.speed = 4
         self.vel = [1, 1]
         self.last_collision = 0
 
