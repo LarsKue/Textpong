@@ -13,6 +13,10 @@ from ball import Ball
 # window and general game settings
 screen_width = 1280
 screen_height = 720
+# causes lag if above ~ 300, default: 150
+tickrate = 200
+# default: 720
+player_speed = 720
 box_size = 30
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -94,15 +98,15 @@ def loop():
         pg.display.update()
 
         # game update rate
-        clock.tick(144)
+        clock.tick(tickrate)
 
 
 def positioning(player):
     # moving the player up or down
     if player.get_keys()[0]:
-        player.get_pos()[1] -= 5
+        player.get_pos()[1] -= 720 / tickrate
     if player.get_keys()[1]:
-        player.get_pos()[1] += 5
+        player.get_pos()[1] += 720 / tickrate
     # keeping the player in the window
     if player.get_pos()[1] < 0 + box_size:
         player.get_pos()[1] = 0 + box_size
@@ -111,8 +115,8 @@ def positioning(player):
 
 
 def ball_positioning(ball):
-    ball.get_pos()[0] += ball.get_vel()[0] * ball.get_speed()
-    ball.get_pos()[1] += ball.get_vel()[1] * ball.get_speed()
+    ball.get_pos()[0] += ball.get_vel()[0] * ball.get_speed() / tickrate
+    ball.get_pos()[1] += ball.get_vel()[1] * ball.get_speed() / tickrate
     if ball.get_pos()[1] < 0 or ball.get_pos()[1] > (screen_height - b_height):
         ball.get_vel()[1] = - ball.get_vel()[1]
     if ball.get_pos()[0] <= 0:
