@@ -78,13 +78,13 @@ def positioning(player):
 
 
 def ball_positioning(ball):
-    ball.get_pos()[0] += ball.get_vel()[0]
-    ball.get_pos()[1] += ball.get_vel()[1]
+    ball.get_pos()[0] += ball.get_vel()[0] * ball.get_speed()
+    ball.get_pos()[1] += ball.get_vel()[1] * ball.get_speed()
     if ball.get_pos()[1] < 0 or ball.get_pos()[1] > (screen_height - b_height):
         ball.get_vel()[1] = - ball.get_vel()[1]
     if ball.get_pos()[0] <= 0 or ball.get_pos()[0] >= screen_width:
-        print("debug")
         ball.set_pos(ball_startpos)
+        ball.set_random_vel()
 
 
 loop()
