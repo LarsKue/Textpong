@@ -34,7 +34,7 @@ class Ball:
         return self.speed
 
     def set_random_vel(self):
-        x = random.uniform(0.3, 0.85)
+        x = random.uniform(0.3, 0.7)
         y = np.sqrt(1 - x ** 2)
 
         if random.randint(0, 1) == 0:

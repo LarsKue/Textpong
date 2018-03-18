@@ -52,6 +52,7 @@ def loop():
         positioning(p1)
         positioning(p2)
         ball_positioning(ball)
+        check_collision(ball, p1, p2)
         # fill the screen with black before drawing anything
         screen.fill(black)
         # drawing players at the given positions
@@ -85,6 +86,17 @@ def ball_positioning(ball):
     if ball.get_pos()[0] <= 0 or ball.get_pos()[0] >= screen_width:
         ball.set_pos(ball_startpos)
         ball.set_random_vel()
+
+
+def check_collision(ball, p1, p2):
+    ball_rect = pg.Rect(ball.get_pos()[0], ball.get_pos()[1], b_width, b_height)
+    p1_rect = pg.Rect(p1.get_pos()[0], p1.get_pos()[1], p_width, p_height)
+    p2_rect = pg.Rect(p2.get_pos()[0], p2.get_pos()[1], p_width, p_height)
+
+    if pg.Rect.colliderect(ball_rect, p1_rect) or pg.Rect.colliderect(ball_rect, p2_rect):
+        ball.get_vel()[0] = - ball.get_vel()[0]
+
+
 
 
 loop()
