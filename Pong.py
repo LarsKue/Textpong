@@ -7,6 +7,7 @@ Description: Pong Game created as an exercise.
 import pygame as pg
 import utils
 from player import Player
+from ball import Ball
 
 # window and general game settings
 screen_width = 1280
@@ -15,8 +16,11 @@ box_size = 30
 black = (0, 0, 0)
 white = (255, 255, 255)
 
+player_img_path = "resources/BouncePads/default.png"
+ball_img_path = "resources/Balls/default.png"
+
 pg.init()
-pg.display.set_caption('Pong')
+pg.display.set_caption("Pong")
 
 screen = pg.display.set_mode((screen_width, screen_height))
 clock = pg.time.Clock()
@@ -25,12 +29,16 @@ clock = pg.time.Clock()
 # keys = [False, False]
 
 # checking player model size
-p_width, p_height = utils.get_image_size("resources/BouncePadSmall.png")
+p_width, p_height = utils.get_image_size(player_img_path)
+b_width, b_height = utils.get_image_size(ball_img_path)
 
 p1 = Player("Lars", True, [20, (screen_height - p_width) / 2])
 p2 = Player("Felipperinerinerinerinerinerinerino der übelste dude of Doomness ( ͡° ͜ʖ ͡°)", True, [screen_width - 20 - p_width, (screen_height - p_width) / 2])
 
-player_im = pg.image.load("resources/BouncePadSmall.png")
+ball = Ball([(screen_width - b_width) / 2, (screen_height - b_height) / 2])
+
+player_im = pg.image.load(player_img_path)
+ball_im = pg.image.load(ball_img_path)
 
 running = True
 
@@ -47,6 +55,7 @@ def loop():
         # drawing players at the given positions
         screen.blit(player_im, p1.get_pos())
         screen.blit(player_im, p2.get_pos())
+        screen.blit(ball, ball.get_pos())
         # update the screen
         pg.display.update()
         # game update rate
