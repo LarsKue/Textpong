@@ -135,24 +135,28 @@ def menu_loop():
 
         playbuttontext = "Play"
         playbutton, play_sur, play_rect = utils.create_button(text=playbuttontext, startheight=(screen_height / 4 +
-                                                                           menutitle.get_rect().height + 70))
+                                                              menutitle.get_rect().height + 70),
+                                                              font=font2, screen_width= screen_width)
 
         # Modes button
 
         modebuttontext = "Modes"
-        modebutton, mode_sur, mode_rect = utils.create_button(modebuttontext, (playbutton.center[1] + playbutton.height))
+        modebutton, mode_sur, mode_rect = utils.create_button(modebuttontext, (playbutton.center[1] + playbutton.height
+                                                                               ), font2, screen_width)
 
         # Settings button
 
         settingsbuttontext = "Settings"
         settingsbutton, settings_sur, settings_rect = utils.create_button(settingsbuttontext, (modebutton.center[1] +
-                                                                                               modebutton.height))
+                                                                                               modebutton.height),
+                                                                          font2, screen_width)
 
         # Exit button
 
         exitbuttontext = "Exit"
         exitbutton, exit_sur, exit_rect = utils.create_button(exitbuttontext, (settingsbutton.center[1] +
-                                                                               settingsbutton.height))
+                                                                               settingsbutton.height), font2,
+                                                              screen_width)
 
         # drawing play button with hover effect
         if playbutton.collidepoint(mouse[0], mouse[1]):

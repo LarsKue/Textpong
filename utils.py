@@ -17,12 +17,11 @@ def get_image_size(path):
     return width, height
 
 
-def create_button(text, startheight):
+def create_button(text, startheight, font, screen_width):
     import pygame as pg
-    from Pong import font2, screen_width, white
 
     button = pg.Rect(0, 0, 325, 100)
-    buttontext = font2.render(text, False, white)
+    buttontext = font.render(text, False, (255, 255, 255))
     buttontext_rect = buttontext.get_rect()
 
     # adjusting width for contained text
