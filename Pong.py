@@ -79,20 +79,18 @@ balls_list.append(ball)
 player_im = pg.image.load(player_img_path)
 ball_im = pg.image.load(ball_img_path)
 
-running = True
-intro = True
-
 
 def game_intro():
-    global intro
+    intro = True
     # time delay for fullscreen to establish
     pg.time.delay(2500)
     # default: -225
     fade = -255
 
     while intro:
-        if not key_listener.introchecks():
-            intro = False
+        if key_listener.introchecks():
+            menu_loop()
+            return
         screen.fill(white)
         title = font.render("Pong", False, black)
         title.set_alpha(255 - abs(fade))
@@ -109,15 +107,24 @@ def game_intro():
         pg.display.update()
         fade += 1
         if fade > 255:
-            intro = False
+            menu_loop()
+            return
 
-    # mouse should be visible in the menu
+
+def menu_loop():
     pg.mouse.set_visible(True)
     menu = True
     while menu:
         mouse = pg.mouse.get_pos()
-        if not key_listener.introchecks():
+
+        pressed = key_listener.menuchecks()
+        if pressed == "leftclick":
+            game_loop()
             return
+        elif pressed == "escape":
+            pg.quit()
+            exit(0)
+
         screen.fill(white)
 
         menutitle = font.render("This is a menu", False, black)
@@ -157,11 +164,14 @@ def game_intro():
     clock.tick(30)
 
 
-def loop():
+def game_loop():
     pg.mouse.set_visible(False)
     # loop for as long as running is true
+    running = True
     while running:
-        key_listener.keychecks(p1, p2)
+        if key_listener.keychecks(p1, p2):
+            pause_menu()
+            return
 
         # Positions and collisions
         positioning(p1)
@@ -206,6 +216,41 @@ def loop():
 
         # game update rate
         clock.tick(tickrate)
+
+        # menu_loop()
+
+
+def pause_menu():
+    pg.mouse.set_visible(True)
+    pause = True
+    while pause:
+        if key_listener.pausechecks():
+            game_loop()
+            return
+
+        # Make background transparent
+        background = pg.Surface([screen_width, screen_height])
+        background.set_alpha(100)
+        screen.blit(background, [0, 0])
+
+        menutitle = font.render("PAUSE", False, white)
+        menutitle_rect = menutitle.get_rect()
+        menutitle_rect.center = ((screen_width/2), (screen_height / 2))
+        screen.blit(menutitle, menutitle_rect)
+
+        # button = pg.rect(screen, green, (150, 550, 100, 50))
+        # buttontext = font2.render("This is a button", False, black)
+        # buttontext_rect = buttontext.get_rect()
+        # # adjusting button width for the contained text
+        # button.width = buttontext_rect.width + 30
+        # buttontext_rect.center = button.center
+        # screen.blit(buttontext, buttontext_rect)
+
+        pg.display.update()
+
+        # menu tickrate
+        # default: 60
+        clock.tick(30)
 
 
 def positioning(player):
@@ -276,7 +321,7 @@ def handle_collision(ball, ball_rect, p_rect):
 
 
 game_intro()
-loop()
+menu_loop()
 
 
 
