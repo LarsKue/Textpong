@@ -26,9 +26,6 @@ pg.display.set_caption("Pong")
 screen = pg.display.set_mode((screen_width, screen_height))
 clock = pg.time.Clock()
 
-# initializing WASD keys (where a is equal to w and d is equal to s)
-# keys = [False, False]
-
 # checking player model size
 p_width, p_height = utils.get_image_size(player_img_path)
 b_width, b_height = utils.get_image_size(ball_img_path)
