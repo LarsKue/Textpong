@@ -15,8 +15,12 @@ def keychecks(p1, p2):
         if event.type == pg.QUIT:
             pg.quit()
             exit(0)
+
         # checking for key down presses
         if event.type == pg.KEYDOWN:
+            if event.key == K_ESCAPE:
+                pg.quit()
+                exit(0)
             if event.key == K_w or event.key == K_a:
                 p1.get_keys()[0] = True
             if event.key == K_s or event.key == K_d:
@@ -25,6 +29,7 @@ def keychecks(p1, p2):
                 p2.get_keys()[0] = True
             if event.key == K_DOWN or event.key == K_RIGHT:
                 p2.get_keys()[1] = True
+
         # checking for key releases
         if event.type == pg.KEYUP:
             if event.key == pg.K_w or event.key == K_a:
