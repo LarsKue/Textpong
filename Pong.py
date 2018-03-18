@@ -75,9 +75,6 @@ def positioning(player):
         player.get_pos()[1] = screen_height - p_height - box_size
 
 
-
-
-
 loop()
 
 
