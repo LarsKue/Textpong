@@ -20,7 +20,7 @@ box_size = 30
 black = (0, 0, 0)
 white = (255, 255, 255)
 # Maximum concurrent balls, set 0 for no limit
-max_balls = 500
+max_balls = 300
 
 player_img_path = "resources/BouncePads/default.png"
 ball_img_path = "resources/Balls/default.png"
@@ -29,6 +29,10 @@ font_path = "resources/Fonts/block_merged.ttf"
 pg.init()
 pg.display.set_caption("Pong")
 
+icon = pg.image.load("resources/default_icon.png")
+pg.display.set_icon(icon)
+
+screen = pg.display.set_mode((screen_width, screen_height))
 # screen = pg.display.set_mode((screen_width, screen_height))
 screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
 
