@@ -5,6 +5,8 @@ Scripted by: Philipp Koehler, Lars Kuehmichel
 Description: Defines the ball object and common properties
 """
 
+import random
+
 
 class Ball:
 
@@ -21,3 +23,8 @@ class Ball:
 
     def get_vel(self):
         return self.vel
+
+    def set_random_vel(self):
+        x = random.uniform(0.0, 1.0)
+
+        self.vel = [random.uniform(0.0, 1.0), random.uniform(0.0, 1.0)]
