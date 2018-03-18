@@ -53,6 +53,16 @@ def loop():
         clock.tick(144)
 
 
+def get_image_size(path):
+    import get_image_size
+    try:
+        width, height = get_image_size.get_image_size(path)
+    except get_image_size.UnknownImageFormat:
+        width, height = -1, -1
+
+    return width, height
+
+
 loop()
 
 
