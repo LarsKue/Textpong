@@ -3,6 +3,7 @@
 # Description: Pong Game created as an exercise.
 
 import pygame as pg
+import utils
 
 screen_width = 1280
 screen_height = 720
@@ -20,7 +21,8 @@ keys = [False, False]
 
 player = pg.image.load("resources/BouncePadSmall.png")
 
-# checking player size
+# checking player model size
+p_width, p_height = utils.get_image_size("resources/BouncePadSmall.png")
 
 # defining player starting position
 # BouncePadSmall.png is 125 pixels high and we want the player to start centered
@@ -53,14 +55,7 @@ def loop():
         clock.tick(144)
 
 
-def get_image_size(path):
-    import get_image_size
-    try:
-        width, height = get_image_size.get_image_size(path)
-    except get_image_size.UnknownImageFormat:
-        width, height = -1, -1
 
-    return width, height
 
 
 loop()

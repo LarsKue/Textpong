@@ -69,7 +69,7 @@ def get_image_size(file_path):
     dependencies except the os and struct builtin modules
     """
     img = get_image_metadata(file_path)
-    return (img.width, img.height)
+    return img.width, img.height
 
 
 def get_image_metadata(file_path):
@@ -118,12 +118,12 @@ def get_image_metadata(file_path):
             input.read(2)
             b = input.read(1)
             try:
-                while (b and ord(b) != 0xDA):
-                    while (ord(b) != 0xFF):
+                while b and ord(b) != 0xDA:
+                    while ord(b) != 0xFF:
                         b = input.read(1)
-                    while (ord(b) == 0xFF):
+                    while ord(b) == 0xFF:
                         b = input.read(1)
-                    if (ord(b) >= 0xC0 and ord(b) <= 0xC3):
+                    if 0xC0 <= ord(b) <= 0xC3:
                         input.read(3)
                         h, w = struct.unpack(">HH", input.read(4))
                         break
