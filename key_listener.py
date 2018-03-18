@@ -44,7 +44,6 @@ def keychecks(p1, p2):
 
 def introchecks():
     for event in pg.event.get():
-        print(event)
         if event.type == pg.QUIT:
             pg.quit()
             exit(0)
@@ -56,3 +55,16 @@ def introchecks():
             if event.key == K_ESCAPE:
                 return False
     return True
+
+
+def menuchecks():
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            pg.quit()
+            exit(0)
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                return "leftclick"
+        if event.type == pg.KEYDOWN:
+            if event.key == K_ESCAPE:
+                return "escape"

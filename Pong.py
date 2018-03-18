@@ -27,6 +27,7 @@ white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
+buttonhover = (50, 50, 50)
 
 # Maximum concurrent balls, set 0 for no limit
 max_balls = 300
@@ -109,32 +110,61 @@ def game_intro():
         fade += 1
         if fade > 255:
             intro = False
-
+    # mouse should be visible in the menu
+    pg.mouse.set_visible(True)
     menu = True
     while menu:
-        screen.fill(white)
-        menutitle = font.render("This is a menu", False, black)
-        menutitle_rect = menutitle.get_rect()
-        menutitle_rect.center = ((screen_width/2), (screen_height / 2))
-        screen.blit(menutitle, menutitle_rect)
+        mouse = pg.mouse.get_pos()
         if not key_listener.introchecks():
             return
-        button = pg.rect(screen, green, (150, 550, 100, 50))
-        buttontext = font2.render("This is a button", False, black)
-        buttontext_rect = buttontext.get_rect()
-        # adjusting button width for the contained text
-        button.width = buttontext_rect.width + 30
-        buttontext_rect.center = button.center
-        screen.blit(buttontext, buttontext_rect)
+        screen.fill(white)
+
+        menutitle = font.render("This is a menu", False, black)
+        menutitle_rect = menutitle.get_rect()
+        menutitle_rect.center = ((screen_width/2), (screen_height / 4))
+
+        # Play button
+
+        playbutton = pg.Rect(0, 0, 325, 100)
+        playbuttontext = font2.render("Play", False, white)
+        playbuttontext_rect = playbuttontext.get_rect()
+
+        # adjusting width for contained text
+        playbutton.center = (screen_width / 2, screen_height / 4 + menutitle.get_rect().height + 100)
+        playbuttontext_rect.center = playbutton.center
+
+        # Modes button
+
+        modebutton = pg.Rect(0, 0, 325, 100)
+        modebuttontext = font2.render("Modes", False, white)
+        modebuttontext_rect = modebuttontext.get_rect()
+
+        modebutton.center = (screen_width / 2, playbutton.center[1] + playbutton.height + 20)
+        modebuttontext_rect.center = modebutton.center
+
+        # adding hover effect to buttons and drawing them
+        if playbutton.collidepoint(mouse[0], mouse[1]):
+            pg.draw.rect(screen, buttonhover, playbutton)
+        else:
+            pg.draw.rect(screen, black, playbutton)
+
+        if modebutton.collidepoint(mouse[0], mouse[1]):
+            pg.draw.rect(screen, buttonhover, modebutton)
+        else:
+            pg.draw.rect(screen, black, modebutton)
+
+        screen.blit(menutitle, menutitle_rect)
+        screen.blit(playbuttontext, playbuttontext_rect)
+        screen.blit(modebuttontext, modebuttontext_rect)
         pg.display.update()
 
     # menu tickrate
-    # default: 60
-    clock.tick(60)
+    # default: 30
+    clock.tick(30)
 
 
 def loop():
-
+    pg.mouse.set_visible(False)
     # loop for as long as running is true
     while running:
         key_listener.keychecks(p1, p2)
