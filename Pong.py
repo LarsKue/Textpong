@@ -13,7 +13,7 @@ from ball import Ball
 # window and general game settings
 screen_width = 1920
 screen_height = 1080
-fullscreen = True
+fullscreen = False
 # causes lag if above ~ 300, default: 144
 tickrate = 144
 # default: 720
@@ -140,23 +140,51 @@ def menu_loop():
         # Modes button
 
         modebuttontext = "Modes"
-        modebutton, mode_sur, mode_rect = utils.create_button(text=modebuttontext, startheight=(playbutton.center[1] +
-                                                                                                playbutton.height))
+        modebutton, mode_sur, mode_rect = utils.create_button(modebuttontext, (playbutton.center[1] + playbutton.height))
 
-        # adding hover effect to buttons and drawing them
+        # Settings button
+
+        settingsbuttontext = "Settings"
+        settingsbutton, settings_sur, settings_rect = utils.create_button(settingsbuttontext, (modebutton.center[1] +
+                                                                                               modebutton.height))
+
+        # Exit button
+
+        exitbuttontext = "Exit"
+        exitbutton, exit_sur, exit_rect = utils.create_button(exitbuttontext, (settingsbutton.center[1] +
+                                                                               settingsbutton.height))
+
+        # drawing play button with hover effect
         if playbutton.collidepoint(mouse[0], mouse[1]):
             pg.draw.rect(screen, buttonhover, playbutton)
         else:
             pg.draw.rect(screen, black, playbutton)
 
+        # drawing mode button with hover effect
         if modebutton.collidepoint(mouse[0], mouse[1]):
             pg.draw.rect(screen, buttonhover, modebutton)
         else:
             pg.draw.rect(screen, black, modebutton)
 
+        # drawing settings button with hover effect
+        if settingsbutton.collidepoint(mouse[0], mouse[1]):
+            pg.draw.rect(screen, buttonhover, settingsbutton)
+        else:
+            pg.draw.rect(screen, black, settingsbutton)
+
+        # drawing exit button with hover effect
+        if exitbutton.collidepoint(mouse[0], mouse[1]):
+            pg.draw.rect(screen, buttonhover, exitbutton)
+        else:
+            pg.draw.rect(screen, black, exitbutton)
+
+        # drawing menu title and button texts
         screen.blit(menutitle, menutitle_rect)
         screen.blit(play_sur, play_rect)
         screen.blit(mode_sur, mode_rect)
+        screen.blit(settings_sur, settings_rect)
+        screen.blit(exit_sur, exit_rect)
+
         pg.display.update()
 
     # menu tickrate

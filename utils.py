@@ -19,7 +19,7 @@ def get_image_size(path):
 
 def create_button(text, startheight):
     import pygame as pg
-    from Pong import font2, screen_height, screen_width, white
+    from Pong import font2, screen_width, white
 
     button = pg.Rect(0, 0, 325, 100)
     buttontext = font2.render(text, False, white)
