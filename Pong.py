@@ -127,7 +127,7 @@ def menu_loop():
 
         screen.fill(white)
 
-        menutitle = font.render("This is a menu", False, black)
+        menutitle = font.render("Main Menu", False, black)
         menutitle_rect = menutitle.get_rect()
         menutitle_rect.center = ((screen_width/2), (screen_height / 4))
 
