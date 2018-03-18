@@ -77,8 +77,8 @@ def positioning(player):
 
 
 def ball_positioning(ball):
-    ball.get_pos()[0] += ball.vel()[0]
-    ball.get_pos()[1] += ball.vel()[1]
+    ball.get_pos()[0] += ball.get_vel()[0]
+    ball.get_pos()[1] += ball.get_vel()[1]
 
 
 loop()
