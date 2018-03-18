@@ -55,7 +55,7 @@ def loop():
         # drawing players at the given positions
         screen.blit(player_im, p1.get_pos())
         screen.blit(player_im, p2.get_pos())
-        screen.blit(ball, ball.get_pos())
+        screen.blit(ball_im, ball.get_pos())
         # update the screen
         pg.display.update()
         # game update rate
