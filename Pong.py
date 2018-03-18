@@ -25,12 +25,12 @@ clock = pg.time.Clock()
 # keys = [False, False]
 
 # checking player model size
-p_width, p_height = utils.get_image_size("resources/BouncePadSmall.png")
+p_width, p_height = utils.get_image_size("resources/BouncePads/default.png")
 
 p1 = Player("Lars", True, [20, (screen_height - p_width) / 2])
 p2 = Player("Felipperinerinerinerinerinerinerino der übelste dude of Doomness ( ͡° ͜ʖ ͡°)", True, [screen_width - 20 - p_width, (screen_height - p_width) / 2])
 
-player_im = pg.image.load("resources/BouncePadSmall.png")
+player_im = pg.image.load("resources/BouncePads/default.png")
 
 running = True
 
