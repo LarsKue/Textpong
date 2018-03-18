@@ -6,19 +6,28 @@ Description: Pong Game created as an exercise.
 
 import pygame as pg
 import utils
+import key_listener
 from player import Player
 from ball import Ball
 
 # window and general game settings
 screen_width = 1920
 screen_height = 1080
+fullscreen = True
 # causes lag if above ~ 300, default: 144
 tickrate = 144
 # default: 720
 player_speed = 720
 box_size = 30
+
+
+# useful colours
 black = (0, 0, 0)
 white = (255, 255, 255)
+red = (255, 0, 0)
+green = (0, 255, 0)
+blue = (0, 0, 255)
+
 # Maximum concurrent balls, set 0 for no limit
 max_balls = 300
 
@@ -32,9 +41,11 @@ pg.display.set_caption("Pong")
 icon = pg.image.load("resources/default_icon.png")
 pg.display.set_icon(icon)
 
-screen = pg.display.set_mode((screen_width, screen_height))
-# screen = pg.display.set_mode((screen_width, screen_height))
-screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
+if fullscreen:
+    screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
+    pg.mouse.set_visible(False)
+else:
+    screen = pg.display.set_mode((screen_width, screen_height))
 
 clock = pg.time.Clock()
 
@@ -68,10 +79,62 @@ player_im = pg.image.load(player_img_path)
 ball_im = pg.image.load(ball_img_path)
 
 running = True
+intro = True
+
+
+def game_intro():
+    global intro
+    # time delay for fullscreen to establish
+    pg.time.delay(2500)
+    # default: -225
+    fade = -255
+
+    while intro:
+        if not key_listener.introchecks():
+            intro = False
+        screen.fill(white)
+        title = font.render("Pong", False, black)
+        title.set_alpha(255 - abs(fade))
+        title_rect = title.get_rect()
+        title_rect.center = ((screen_width / 2), (screen_height / 2))
+        screen.blit(title, title_rect)
+        if fade == 0:
+            for delay in range(200):
+                if not key_listener.introchecks():
+                    intro = False
+                    break
+                pg.time.delay(10)
+        pg.time.delay(1)
+        pg.display.update()
+        fade += 1
+        if fade > 255:
+            intro = False
+
+    menu = True
+    while menu:
+        screen.fill(white)
+        menutitle = font.render("This is a menu", False, black)
+        menutitle_rect = menutitle.get_rect()
+        menutitle_rect.center = ((screen_width/2), (screen_height / 2))
+        screen.blit(menutitle, menutitle_rect)
+        if not key_listener.introchecks():
+            return
+        button = pg.rect(screen, green, (150, 550, 100, 50))
+        buttontext = font2.render("This is a button", False, black)
+        buttontext_rect = buttontext.get_rect()
+        # adjusting button width for the contained text
+        button.width = buttontext_rect.width + 30
+        buttontext_rect.center = button.center
+        screen.blit(buttontext, buttontext_rect)
+        pg.display.update()
+
+    # menu tickrate
+    # default: 60
+    clock.tick(60)
 
 
 def loop():
-    import key_listener
+
     # loop for as long as running is true
     while running:
         key_listener.keychecks(p1, p2)
@@ -188,7 +251,7 @@ def handle_collision(ball, ball_rect, p_rect):
 
 
 
-
+game_intro()
 loop()
 
 
