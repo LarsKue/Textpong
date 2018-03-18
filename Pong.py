@@ -13,8 +13,8 @@ from ball import Ball
 # window and general game settings
 screen_width = 1280
 screen_height = 720
-# causes lag if above ~ 300, default: 150
-tickrate = 200
+# causes lag if above ~ 300, default: 144
+tickrate = 144
 # default: 720
 player_speed = 720
 box_size = 30
@@ -39,7 +39,8 @@ p1 = Player("Lars", True, [20, (screen_height - p_height) / 2])
 p2 = Player("Felipperinerinerinerinerinerinerino der übelste dude of Doomness ( ͡° ͜ʖ ͡°)", True, [screen_width - 20 - p_width, (screen_height - p_height) / 2])
 
 balls_list = []
-max_balls = 30
+# maximum number of balls, 0 for no limit
+max_balls = 150
 
 pg.font.init()
 font_size = 40
@@ -123,13 +124,13 @@ def ball_positioning(ball):
         p2.score += 1
         ball.set_pos(ball_startpos)
         ball.set_random_vel()
-        if len(balls_list) < max_balls:
+        if len(balls_list) < max_balls or max_balls == 0:
             balls_list.append(Ball(ball_startpos))
     if ball.get_pos()[0] >= screen_width:
         p1.score += 1
         ball.set_pos(ball_startpos)
         ball.set_random_vel()
-        if len(balls_list) < max_balls:
+        if len(balls_list) < max_balls or max_balls == 0:
             balls_list.append(Ball(ball_startpos))
 
 
