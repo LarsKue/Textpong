@@ -93,9 +93,29 @@ def check_collision(ball, p1, p2):
     p1_rect = pg.Rect(p1.get_pos()[0], p1.get_pos()[1], p_width, p_height)
     p2_rect = pg.Rect(p2.get_pos()[0], p2.get_pos()[1], p_width, p_height)
 
-    if pg.Rect.colliderect(ball_rect, p1_rect) or pg.Rect.colliderect(ball_rect, p2_rect):
+    if pg.Rect.colliderect(ball_rect, p1_rect):
+        handle_collision(ball, ball_rect, p1_rect)
+
+    elif pg.Rect.colliderect(ball_rect, p2_rect):
+        handle_collision(ball, ball_rect, p2_rect)
+
+
+def handle_collision(ball, ball_rect, p_rect):
+    clipping_rect = pg.Rect.clip(ball_rect, p_rect)
+
+    if clipping_rect.width < clipping_rect.height:
         ball.get_vel()[0] = - ball.get_vel()[0]
         ball_positioning(ball)
+    elif clipping_rect.width == clipping_rect.height:
+        ball.get_vel()[0] = - ball.get_vel()[0]
+        ball.get_vel()[1] = - ball.get_vel()[1]
+        ball_positioning(ball)
+    else:
+        ball.get_vel()[1] = - ball.get_vel()[1]
+        ball_positioning(ball)
+
+
+
 
 
 

@@ -13,8 +13,10 @@ class Ball:
 
     def __init__(self, pos):
         self.pos = [pos[0], pos[1]]
-        self.speed = 1
+        self.speed = 2
         self.vel = [1, 1]
+        self.last_collision = 0
+
         self.set_random_vel()
 
     def set_pos(self, pos):
