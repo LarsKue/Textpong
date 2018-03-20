@@ -229,7 +229,7 @@ def settings_loop():
 
         # Resolutions Button
 
-        resbuttontext = "Play"
+        resbuttontext = "Resolution"
         resbutton, res_sur, res_rect = utils.create_button(resbuttontext, (screen_height / 4 +
                                                                            settingstitle.get_rect().height + 70),
                                                               font2, screen_width)
@@ -254,6 +254,24 @@ def settings_loop():
         elif pressed == "escape":
             menu_loop()
             return
+
+        # drawing resolutions button with hover effect
+        if resbutton.collidepoint(mouse[0], mouse[1]):
+            pg.draw.rect(screen, buttonhover, resbutton)
+        else:
+            pg.draw.rect(screen, black, resbutton)
+
+        # drawing return button with hover effect
+        if returnbutton.collidepoint(mouse[0], mouse[1]):
+            pg.draw.rect(screen, buttonhover, returnbutton)
+        else:
+            pg.draw.rect(screen, black, returnbutton)
+
+        screen.blit(settingstitle, settingstitle_rect)
+        screen.blit(res_sur, res_rect)
+        screen.blit(return_sur, return_rect)
+
+        pg.display.update()
 
 
 def resolutions_loop():
