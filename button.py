@@ -21,8 +21,8 @@ class Button:
         self.box_color = [0, 0, 0]
         self.box_hover_color = [50, 50, 50]
 
-        self.button = None
-        self.button_text = None
+        self.button_obj = None
+        self.button_text_obj = None
         self.button_text_rect = None
 
         self.update()
@@ -30,14 +30,14 @@ class Button:
     def draw(self, screen):
         # Draw box
         if self.hovering():
-            pg.draw.rect(screen, self.box_hover_color, self.button)
-            self.button_text = self.font.render(self.text, False, self.text_hover_color)
+            pg.draw.rect(screen, self.box_hover_color, self.button_obj)
+            self.button_text_obj = self.font.render(self.text, False, self.text_hover_color)
         else:
-            pg.draw.rect(screen, self.box_color, self.button)
-            self.button_text = self.font.render(self.text, False, self.text_color)
+            pg.draw.rect(screen, self.box_color, self.button_obj)
+            self.button_text_obj = self.font.render(self.text, False, self.text_color)
 
         # Draw text
-        screen.blit(self.button_text, self.button_text_rect)
+        screen.blit(self.button_text_obj, self.button_text_rect)
 
     def is_clicked(self, events):
         for event in events:
@@ -49,12 +49,12 @@ class Button:
 
     def hovering(self):
         mouse = pg.mouse.get_pos()
-        return self.button.collidepoint(mouse[0], mouse[1])
+        return self.button_obj.collidepoint(mouse[0], mouse[1])
 
     def update(self):
-        self.button = pg.Rect(0, 0, self.width, self.height)
-        self.button.center = (self.screen_width / 2, self.start_height)
+        self.button_obj = pg.Rect(0, 0, self.width, self.height)
+        self.button_obj.center = (self.screen_width / 2, self.start_height)
 
-        self.button_text = self.font.render(self.text, False, self.text_color)
-        self.button_text_rect = self.button_text.get_rect()
-        self.button_text_rect.center = self.button.center
+        self.button_text_obj = self.font.render(self.text, False, self.text_color)
+        self.button_text_rect = self.button_text_obj.get_rect()
+        self.button_text_rect.center = self.button_obj.center

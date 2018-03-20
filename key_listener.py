@@ -76,10 +76,6 @@ def pausechecks(events):
         if event.type == pg.QUIT:
             pg.quit()
             exit(0)
-        # skipping menus upon left clicking or hitting Escape
-        if event.type == pg.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                return True
         if event.type == pg.KEYDOWN:
             if event.key == K_ESCAPE:
                 return True

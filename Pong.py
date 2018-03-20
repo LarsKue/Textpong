@@ -13,7 +13,7 @@ from ball import Ball
 from button import Button
 
 # window and general game settings
-screen_width = 800
+screen_width = 1400
 screen_height = 800
 fullscreen = False
 # causes lag if above ~ 300, default: 144
@@ -59,9 +59,12 @@ clock = pg.time.Clock()
 p_width, p_height = utils.get_image_size(player_img_path)
 b_width, b_height = utils.get_image_size(ball_img_path)
 
+startpos_p1 = [20, (screen_height - p_height) / 2]
+startpos_p2 = [screen_width - 20 - p_width, (screen_height - p_height) / 2]
+
 # creating player objects
-p1 = Player("Lars", True, [20, (screen_height - p_height) / 2])
-p2 = Player("Felipper, aka 1 dude", True, [screen_width - 20 - p_width, (screen_height - p_height) / 2])
+p1 = Player("Lars", True, startpos_p1)
+p2 = Player("Felipper, aka 1 dude", True, startpos_p2)
 
 balls_list = []
 
@@ -136,6 +139,7 @@ def menu_loop():
     modebutton = Button("Modes", font2, (playbutton.start_height + playbutton.height + 30), screen_width)
     settingsbutton = Button("Settings", font2, (modebutton.start_height + modebutton.height + 30), screen_width)
     exitbutton = Button("Exit", font2, (settingsbutton.start_height + settingsbutton.height + 30), screen_width)
+    i = 0
 
     while menu:
         events = pg.event.get()
@@ -146,10 +150,13 @@ def menu_loop():
 
         # Check for button clicks
         if playbutton.is_clicked(events):
-            game_loop()
+            start_new_game()
             return
         if modebutton.is_clicked(events):
             print("No Modes available yet")
+            playbutton.text = str(i)
+            playbutton.update()
+            i += 1
         if settingsbutton.is_clicked(events):
             settings_loop()
             return
@@ -212,17 +219,14 @@ def resolutions_loop():
     # creating submenu title
     restitle = font.render("Select a Resolution", False, black)
     restitle_rect = restitle.get_rect()
-    restitle_rect.center = ((screen_width / 2), (screen_height / 4))
+    restitle_rect.center = ((screen_width / 2), (screen_height / 15))
 
     # creating fullscreen toggle button
+    fullscrnbutton = Button("Toggle Fullscreen: OFF", font2,
+                            (restitle_rect.center[1] + restitle.get_rect().height + 70),
+                            screen_width)
     if fullscreen:
-        fullscrnbutton = Button("Toggle Fullscreen: ON", font2,
-                                (screen_height / 4 + restitle.get_rect().height + 70),
-                                screen_width)
-    else:
-        fullscrnbutton = Button("Toggle Fullscreen: OFF", font2,
-                                (screen_height / 4 + restitle.get_rect().height + 70),
-                                screen_width)
+        fullscrnbutton.text = "Toggle Fullscreen: ON"
 
     fullscrnbutton.width = 400
     fullscrnbutton.update()
@@ -250,36 +254,37 @@ def resolutions_loop():
             if fullscreen:
                 fullscreen = False
                 screen = pg.display.set_mode((screen_width, screen_height))
-                fullscrnbutton.button_text = "Toggle Fullscreen: OFF"
-                fullscrnbutton.update()
-                pg.time.wait(2000)
+                resolutions_loop()
+                return
             else:
                 fullscreen = True
                 screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
-                fullscrnbutton.button_text = "Toggle Fullscreen: ON"
-                fullscrnbutton.update()
-                pg.time.wait(2000)
+                resolutions_loop()
+                return
         if res_1_button.is_clicked(events):
-            screen_width = 600
-            screen_height = 600
-            if fullscreen:
-                screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
-            else:
-                screen = pg.display.set_mode((screen_width, screen_height))
+            update_resolution(600, 600)
+            resolutions_loop()
+            return
         if res_2_button.is_clicked(events):
-            screen_width = 1280
-            screen_height = 720
-            if fullscreen:
-                screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
-            else:
-                screen = pg.display.set_mode((screen_width, screen_height))
-
+            update_resolution(1280, 720)
+            resolutions_loop()
+            return
+        if res_3_button.is_clicked(events):
+            update_resolution(1920, 1080)
+            resolutions_loop()
+            return
+        if res_4_button.is_clicked(events):
+            update_resolution(2560, 1440)
+            resolutions_loop()
+            return
 
         screen.fill(white)
         screen.blit(restitle, restitle_rect)
         fullscrnbutton.draw(screen)
         res_1_button.draw(screen)
         res_2_button.draw(screen)
+        res_3_button.draw(screen)
+        res_4_button.draw(screen)
 
         pg.display.update()
 
@@ -345,6 +350,19 @@ def game_loop():
 def pause_menu():
     pg.mouse.set_visible(True)
 
+    pausetitle = font.render("Pause", False, white)
+    pausetitle_rect = pausetitle.get_rect()
+    pausetitle_rect.center = ((screen_width/2), (screen_height / 4))
+
+    playbutton = Button("Continue", font2, (screen_height / 4 + pausetitle.get_rect().height + 70), screen_width)
+    playbutton.box_color = white
+    playbutton.text_color = black
+    playbutton.update()
+    exitbutton = Button("Exit", font2, (playbutton.start_height + playbutton.height + 30), screen_width)
+    exitbutton.box_color = white
+    exitbutton.text_color = black
+    playbutton.update()
+
     background = pg.Surface([screen_width, screen_height])
     background.fill((0, 0, 0))
     background.set_alpha(25)
@@ -364,21 +382,18 @@ def pause_menu():
             fade -= 1
             # print((1-255/25/100)**(15-fade))
 
-        # Make background transparent
+        if playbutton.is_clicked(events):
+            game_loop()
+            return
+        if exitbutton.is_clicked(events):
+            balls_list = []
+            menu_loop()
+            return
 
-        menutitle = font.render("PAUSE", False, white)
-        menutitle_rect = menutitle.get_rect()
-        menutitle_rect.center = ((screen_width/2), (screen_height / 2))
-        screen.blit(menutitle, menutitle_rect)
 
-        # button = pg.rect(screen, green, (150, 550, 100, 50))
-        # buttontext = font2.render("This is a button", False, black)
-        # buttontext_rect = buttontext.get_rect()
-        # # adjusting button width for the contained text
-        # button.width = buttontext_rect.width + 30
-        # buttontext_rect.center = button.center
-        # screen.blit(buttontext, buttontext_rect)
-
+        screen.blit(pausetitle, pausetitle_rect)
+        playbutton.draw(screen)
+        exitbutton.draw(screen)
         pg.display.update()
 
         # menu tickrate
@@ -447,6 +462,29 @@ def handle_collision(ball, ball_rect, p_rect):
     ball_positioning(ball)
 
     ball.set_colliding(True)
+
+
+def start_new_game():
+    # Resets players
+    p1.reset()
+    p2.reset()
+
+    # Resets balls
+    del balls_list[:]
+    balls_list.append(Ball(ball_startpos))
+
+    # Starts the game
+    game_loop()
+
+
+def update_resolution(width, height):
+    global screen, screen_width, screen_height
+    screen_width = width
+    screen_height = height
+    if fullscreen:
+        screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
+    else:
+        screen = pg.display.set_mode((screen_width, screen_height))
 
 
 

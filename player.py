@@ -15,6 +15,7 @@ class Player:
         self.keys = [False, False]
         self.size = 1
         self.score = 0
+        self.startpos = pos
 
     def set_name(self, name):
         self.name = name
@@ -33,3 +34,9 @@ class Player:
 
     def get_pos(self):
         return self.pos
+
+    def reset(self):
+        self.pos = self.startpos
+        self.keys = [False, False]
+        self.size = 1
+        self.score = 0
