@@ -9,8 +9,8 @@ from pygame.locals import *
 import pygame as pg
 
 
-def keychecks(p1, p2):
-    for event in pg.event.get():
+def keychecks(p1, p2, events):
+    for event in events:
         # checking if the player presses the close window button (X at top right)
         if event.type == pg.QUIT:
             pg.quit()
@@ -43,8 +43,8 @@ def keychecks(p1, p2):
     return False
 
 
-def introchecks():
-    for event in pg.event.get():
+def introchecks(events):
+    for event in events:
         if event.type == pg.QUIT:
             pg.quit()
             exit(0)
@@ -58,8 +58,8 @@ def introchecks():
     return False
 
 
-def menuchecks():
-    for event in pg.event.get():
+def menuchecks(events):
+    for event in events:
         if event.type == pg.QUIT:
             pg.quit()
             exit(0)
@@ -71,8 +71,8 @@ def menuchecks():
                 return "escape"
 
 
-def pausechecks():
-    for event in pg.event.get():
+def pausechecks(events):
+    for event in events:
         if event.type == pg.QUIT:
             pg.quit()
             exit(0)

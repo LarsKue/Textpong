@@ -7,8 +7,10 @@ Description: Pong Game created as an exercise.
 import pygame as pg
 import utils
 import key_listener
+import os
 from player import Player
 from ball import Ball
+from button import Button
 
 # window and general game settings
 screen_width = 800
@@ -36,6 +38,7 @@ player_img_path = "resources/BouncePads/default.png"
 ball_img_path = "resources/Balls/default.png"
 font_path = "resources/Fonts/block_merged.ttf"
 
+os.environ['SDL_VIDEO_CENTERED'] = '1'
 pg.init()
 pg.display.set_caption("Pong")
 
@@ -93,7 +96,8 @@ def game_intro():
     wait = 0
 
     while intro:
-        if key_listener.introchecks():
+        events = pg.event.get()
+        if key_listener.introchecks(events):
             menu_loop()
             return
 
@@ -122,90 +126,43 @@ def game_intro():
 def menu_loop():
     pg.mouse.set_visible(True)
     menu = True
+
+    menutitle = font.render("Main Menu", False, black)
+    menutitle_rect = menutitle.get_rect()
+    menutitle_rect.center = ((screen_width/2), (screen_height / 4))
+
+    playbutton = Button("Play", font2, (screen_height / 4 + menutitle.get_rect().height + 70), screen_width)
+    modebutton = Button("Modes", font2, (playbutton.start_height + playbutton.height + 30), screen_width)
+    settingsbutton = Button("Settings", font2, (modebutton.start_height + modebutton.height + 30), screen_width)
+    exitbutton = Button("Exit", font2, (settingsbutton.start_height + settingsbutton.height + 30), screen_width)
+
     while menu:
-        mouse = pg.mouse.get_pos()
-
-        screen.fill(white)
-
-        # Menu Title
-
-        menutitle = font.render("Main Menu", False, black)
-        menutitle_rect = menutitle.get_rect()
-        menutitle_rect.center = ((screen_width/2), (screen_height / 4))
-
-        # Play button
-
-        playbuttontext = "Play"
-        playbutton, play_sur, play_rect = utils.create_button(text=playbuttontext, startheight=(screen_height / 4 +
-                                                              menutitle.get_rect().height + 70),
-                                                              font=font2, screen_width= screen_width)
-
-        # Modes button
-
-        modebuttontext = "Modes"
-        modebutton, mode_sur, mode_rect = utils.create_button(modebuttontext, (playbutton.center[1] + playbutton.height
-                                                                               ), font2, screen_width)
-
-        # Settings button
-
-        settingsbuttontext = "Settings"
-        settingsbutton, settings_sur, settings_rect = utils.create_button(settingsbuttontext, (modebutton.center[1] +
-                                                                                               modebutton.height),
-                                                                          font2, screen_width)
-
-        # Exit button
-
-        exitbuttontext = "Exit"
-        exitbutton, exit_sur, exit_rect = utils.create_button(exitbuttontext, (settingsbutton.center[1] +
-                                                                               settingsbutton.height), font2,
-                                                              screen_width)
-
-        # button functions
-
-        pressed = key_listener.menuchecks()
-
-        if pressed == "leftclick":
-            if playbutton.collidepoint(mouse[0], mouse[1]):
-                game_loop()
-                return
-            if modebutton.collidepoint(mouse[0], mouse[1]):
-                print("No Modes available yet")
-            if settingsbutton.collidepoint(mouse[0], mouse[1]):
-                settings_loop()
-        elif pressed == "escape":
+        events = pg.event.get()
+        pressed = key_listener.menuchecks(events)
+        if pressed == "escape":
             pg.quit()
             exit(0)
 
-        # drawing play button with hover effect
-        if playbutton.collidepoint(mouse[0], mouse[1]):
-            pg.draw.rect(screen, buttonhover, playbutton)
-        else:
-            pg.draw.rect(screen, black, playbutton)
-
-        # drawing mode button with hover effect
-        if modebutton.collidepoint(mouse[0], mouse[1]):
-            pg.draw.rect(screen, buttonhover, modebutton)
-        else:
-            pg.draw.rect(screen, black, modebutton)
-
-        # drawing settings button with hover effect
-        if settingsbutton.collidepoint(mouse[0], mouse[1]):
-            pg.draw.rect(screen, buttonhover, settingsbutton)
-        else:
-            pg.draw.rect(screen, black, settingsbutton)
-
-        # drawing exit button with hover effect
-        if exitbutton.collidepoint(mouse[0], mouse[1]):
-            pg.draw.rect(screen, buttonhover, exitbutton)
-        else:
-            pg.draw.rect(screen, black, exitbutton)
+        # Check for button clicks
+        if playbutton.is_clicked(events):
+            game_loop()
+            return
+        if modebutton.is_clicked(events):
+            print("No Modes available yet")
+        if settingsbutton.is_clicked(events):
+            settings_loop()
+            return
+        if exitbutton.is_clicked(events):
+            pg.quit()
+            exit(0)
 
         # drawing menu title and button texts
+        screen.fill(white)
         screen.blit(menutitle, menutitle_rect)
-        screen.blit(play_sur, play_rect)
-        screen.blit(mode_sur, mode_rect)
-        screen.blit(settings_sur, settings_rect)
-        screen.blit(exit_sur, exit_rect)
+        playbutton.draw(screen)
+        modebutton.draw(screen)
+        settingsbutton.draw(screen)
+        exitbutton.draw(screen)
 
         pg.display.update()
 
@@ -217,6 +174,7 @@ def menu_loop():
 def settings_loop():
     settings = True
     while settings:
+        events = pg.event.get()
         mouse = pg.mouse.get_pos()
 
         screen.fill(white)
@@ -242,7 +200,7 @@ def settings_loop():
 
         # button functions
 
-        pressed = key_listener.menuchecks()
+        pressed = key_listener.menuchecks(events)
 
         if pressed == "leftclick":
             if resbutton.collidepoint(mouse[0], mouse[1]):
@@ -278,6 +236,7 @@ def resolutions_loop():
     global fullscreen, screen_width, screen_height
     resolutions = True
     while resolutions:
+        events = pg.event.get()
         mouse = pg.mouse.get_pos()
 
         screen.fill(white)
@@ -309,7 +268,7 @@ def resolutions_loop():
 
         # button functions
 
-        pressed = key_listener.menuchecks()
+        pressed = key_listener.menuchecks(events)
 
         if pressed == "leftclick":
             if fullscrnbutton.collidepoint(mouse[0], mouse[1]):
@@ -333,7 +292,8 @@ def game_loop():
     # loop for as long as running is true
     running = True
     while running:
-        if key_listener.keychecks(p1, p2):
+        events = pg.event.get()
+        if key_listener.keychecks(p1, p2, events):
             pause_menu()
             return
 
@@ -389,19 +349,22 @@ def pause_menu():
 
     background = pg.Surface([screen_width, screen_height])
     background.fill((0, 0, 0))
-    background.set_alpha(220)
+    background.set_alpha(25)
     screen.blit(background, [0, 0])
-    fade = 220
+    fade = 15
 
     pause = True
     while pause:
-        print(background.get_alpha(), "1")
-        if key_listener.pausechecks():
-            print(background.get_alpha(), "2")
+        events = pg.event.get()
+        if key_listener.pausechecks(events):
             game_loop()
             return
 
-
+        # Multiplies multiple backgrounds to achieve fade effect
+        if fade > 0:
+            screen.blit(background, [0, 0])
+            fade -= 1
+            # print((1-255/25/100)**(15-fade))
 
         # Make background transparent
 
@@ -494,7 +457,7 @@ def handle_collision(ball, ball_rect, p_rect):
 
 game_intro()
 menu_loop()
-game_loop()
+# game_loop()
 
 
 
