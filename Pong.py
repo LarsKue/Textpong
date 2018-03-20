@@ -11,8 +11,8 @@ from player import Player
 from ball import Ball
 
 # window and general game settings
-screen_width = 600
-screen_height = 600
+screen_width = 800
+screen_height = 800
 fullscreen = False
 # causes lag if above ~ 300, default: 144
 tickrate = 144
@@ -42,6 +42,7 @@ pg.display.set_caption("Pong")
 icon = pg.image.load("resources/default_icon.png")
 pg.display.set_icon(icon)
 
+# hiding the cursor if the game is played in full screen mode
 if fullscreen:
     screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
     pg.mouse.set_visible(False)
@@ -54,20 +55,23 @@ clock = pg.time.Clock()
 p_width, p_height = utils.get_image_size(player_img_path)
 b_width, b_height = utils.get_image_size(ball_img_path)
 
+# creating player objects
 p1 = Player("Lars", True, [20, (screen_height - p_height) / 2])
 p2 = Player("Felipper, aka 1 dude", True, [screen_width - 20 - p_width, (screen_height - p_height) / 2])
 
 balls_list = []
 
+# useful fonts
 font_size = 40
 font = pg.font.Font(font_path, font_size)
 
+font_size = 20
+font2 = pg.font.Font(font_path, font_size)
+
+# score screen
 score_p1 = font.render("0", False, white)
 score_p2 = font.render("0", False, white)
 score_minus = font.render("-", False, white)
-
-font_size = 20
-font2 = pg.font.Font(font_path, font_size)
 
 name_p1 = font2.render("", False, white)
 name_p2 = font2.render("", False, white)
@@ -121,15 +125,9 @@ def menu_loop():
     while menu:
         mouse = pg.mouse.get_pos()
 
-        pressed = key_listener.menuchecks()
-        if pressed == "leftclick":
-            game_loop()
-            return
-        elif pressed == "escape":
-            pg.quit()
-            exit(0)
-
         screen.fill(white)
+
+        # Menu Title
 
         menutitle = font.render("Main Menu", False, black)
         menutitle_rect = menutitle.get_rect()
@@ -161,6 +159,22 @@ def menu_loop():
         exitbutton, exit_sur, exit_rect = utils.create_button(exitbuttontext, (settingsbutton.center[1] +
                                                                                settingsbutton.height), font2,
                                                               screen_width)
+
+        # button functions
+
+        pressed = key_listener.menuchecks()
+
+        if pressed == "leftclick":
+            if playbutton.collidepoint(mouse[0], mouse[1]):
+                game_loop()
+                return
+            if modebutton.collidepoint(mouse[0], mouse[1]):
+                print("No Modes available yet")
+            if settingsbutton.collidepoint(mouse[0], mouse[1]):
+                settings_loop()
+        elif pressed == "escape":
+            pg.quit()
+            exit(0)
 
         # drawing play button with hover effect
         if playbutton.collidepoint(mouse[0], mouse[1]):
@@ -200,8 +214,104 @@ def menu_loop():
     clock.tick(30)
 
 
+def settings_loop():
+    settings = True
+    while settings:
+        mouse = pg.mouse.get_pos()
+
+        screen.fill(white)
+
+        # Menu Title
+
+        settingstitle = font.render("Settings", False, black)
+        settingstitle_rect = settingstitle.get_rect()
+        settingstitle_rect.center = ((screen_width / 2), (screen_height / 4))
+
+        # Resolutions Button
+
+        resbuttontext = "Play"
+        resbutton, res_sur, res_rect = utils.create_button(resbuttontext, (screen_height / 4 +
+                                                                           settingstitle.get_rect().height + 70),
+                                                              font2, screen_width)
+
+        # Return Button
+
+        returnbuttontext = "Return"
+        returnbutton, return_sur, return_rect = utils.create_button(returnbuttontext, (resbutton.center[1] +
+                                                                    resbutton.height), font2, screen_width)
+
+        # button functions
+
+        pressed = key_listener.menuchecks()
+
+        if pressed == "leftclick":
+            if resbutton.collidepoint(mouse[0], mouse[1]):
+                resolutions_loop()
+                return
+            if returnbutton.collidepoint(mouse[0], mouse[1]):
+                menu_loop()
+                return
+        elif pressed == "escape":
+            menu_loop()
+            return
+
+
+def resolutions_loop():
+    global fullscreen, screen_width, screen_height
+    resolutions = True
+    while resolutions:
+        mouse = pg.mouse.get_pos()
+
+        screen.fill(white)
+
+        # Menu Title
+
+        restitle = font.render("Select a Resolution", False, black)
+        restitle_rect = restitle.get_rect()
+        restitle_rect.center = ((screen_width / 2), (screen_height / 4))
+
+        # Fullscreen Toggle Button
+
+        if fullscreen:
+            fullscrnbuttontext = "Toggle Fullscreen: ON"
+        else:
+            fullscrnbuttontext = "Toggle Fullscreen: OFF"
+        fullscrnbutton, fullscrn_sur, fullscrn_rect = utils.create_button(fullscrnbuttontext, (screen_height / 4 +
+                                                                           restitle.get_rect().height + 70),
+                                                           font2, screen_width)
+
+        # 600 x 600
+
+        res_1_buttontext = "600 x 600"
+        res_1_button, res_1_sur, res_1_rect = utils.create_button(res_1_buttontext, (fullscrnbutton.center[1] +
+                                                                                       fullscrnbutton.height), font2,
+                                                                    screen_width)
+
+        # 1280 x 720
+
+        # button functions
+
+        pressed = key_listener.menuchecks()
+
+        if pressed == "leftclick":
+            if fullscrnbutton.collidepoint(mouse[0], mouse[1]):
+                if fullscreen:
+                    fullscreen = False
+                else:
+                    fullscreen = True
+                return
+            if res_1_button.collidepoint(mouse[0], mouse[1]):
+                screen_width = 600
+                screen_height = 600
+                return
+        elif pressed == "escape":
+            settings_loop()
+            return
+
+
 def game_loop():
-    pg.mouse.set_visible(False)
+    if fullscreen:
+        pg.mouse.set_visible(False)
     # loop for as long as running is true
     running = True
     while running:
@@ -364,8 +474,8 @@ def handle_collision(ball, ball_rect, p_rect):
 
 
 
-#game_intro()
-#menu_loop()
+game_intro()
+menu_loop()
 game_loop()
 
 
