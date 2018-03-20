@@ -17,7 +17,7 @@ class Button:
         self.width = 325
         self.height = 100
         self.text_color = [255, 255, 255]
-        self.text_hover_color = [255, 0, 255]
+        self.text_hover_color = [255, 255, 255]
         self.box_color = [0, 0, 0]
         self.box_hover_color = [50, 50, 50]
 

@@ -38,6 +38,7 @@ player_img_path = "resources/BouncePads/default.png"
 ball_img_path = "resources/Balls/default.png"
 font_path = "resources/Fonts/block_merged.ttf"
 
+# window starts centered
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pg.init()
 pg.display.set_caption("Pong")
@@ -173,117 +174,114 @@ def menu_loop():
 
 def settings_loop():
     settings = True
+
+    # creating submenu title
+    settingstitle = font.render("Settings", False, black)
+    settingstitle_rect = settingstitle.get_rect()
+    settingstitle_rect.center = ((screen_width / 2), (screen_height / 4))
+
+    # creating buttons
+    resbutton = Button("Resolution", font2, (screen_height / 4 + settingstitle.get_rect().height + 70), screen_width)
+    returnbutton = Button("Return", font2, (resbutton.start_height + resbutton.height + 30), screen_width)
+
     while settings:
         events = pg.event.get()
-        mouse = pg.mouse.get_pos()
-
-        screen.fill(white)
-
-        # Menu Title
-
-        settingstitle = font.render("Settings", False, black)
-        settingstitle_rect = settingstitle.get_rect()
-        settingstitle_rect.center = ((screen_width / 2), (screen_height / 4))
-
-        # Resolutions Button
-
-        resbuttontext = "Resolution"
-        resbutton, res_sur, res_rect = utils.create_button(resbuttontext, (screen_height / 4 +
-                                                                           settingstitle.get_rect().height + 70),
-                                                              font2, screen_width)
-
-        # Return Button
-
-        returnbuttontext = "Return"
-        returnbutton, return_sur, return_rect = utils.create_button(returnbuttontext, (resbutton.center[1] +
-                                                                    resbutton.height), font2, screen_width)
-
-        # button functions
-
-        pressed = key_listener.menuchecks(events)
-
-        if pressed == "leftclick":
-            if resbutton.collidepoint(mouse[0], mouse[1]):
-                resolutions_loop()
-                return
-            if returnbutton.collidepoint(mouse[0], mouse[1]):
-                menu_loop()
-                return
-        elif pressed == "escape":
+        # checking button presses
+        if key_listener.menuchecks(events) == "escape":
+            menu_loop()
+            return
+        if resbutton.is_clicked(events):
+            resolutions_loop()
+            return
+        if returnbutton.is_clicked(events):
             menu_loop()
             return
 
-        # drawing resolutions button with hover effect
-        if resbutton.collidepoint(mouse[0], mouse[1]):
-            pg.draw.rect(screen, buttonhover, resbutton)
-        else:
-            pg.draw.rect(screen, black, resbutton)
-
-        # drawing return button with hover effect
-        if returnbutton.collidepoint(mouse[0], mouse[1]):
-            pg.draw.rect(screen, buttonhover, returnbutton)
-        else:
-            pg.draw.rect(screen, black, returnbutton)
-
+        # drawing buttons
+        screen.fill(white)
         screen.blit(settingstitle, settingstitle_rect)
-        screen.blit(res_sur, res_rect)
-        screen.blit(return_sur, return_rect)
+        resbutton.draw(screen)
 
         pg.display.update()
 
 
 def resolutions_loop():
-    global fullscreen, screen_width, screen_height
+    global fullscreen, screen_width, screen_height, screen
     resolutions = True
+
+    # creating submenu title
+    restitle = font.render("Select a Resolution", False, black)
+    restitle_rect = restitle.get_rect()
+    restitle_rect.center = ((screen_width / 2), (screen_height / 4))
+
+    # creating fullscreen toggle button
+    if fullscreen:
+        fullscrnbutton = Button("Toggle Fullscreen: ON", font2,
+                                (screen_height / 4 + restitle.get_rect().height + 70),
+                                screen_width)
+    else:
+        fullscrnbutton = Button("Toggle Fullscreen: OFF", font2,
+                                (screen_height / 4 + restitle.get_rect().height + 70),
+                                screen_width)
+
+    fullscrnbutton.width = 400
+    fullscrnbutton.update()
+
+    # creating resolution buttons
+    # 600 x 600
+    res_1_button = Button("600 x 600", font2, fullscrnbutton.start_height + fullscrnbutton.height + 30, screen_width)
+
+    # 1280 x 720
+    res_2_button = Button("1280 x 720", font2, res_1_button.start_height + res_1_button.height + 30, screen_width)
+
+    # 1920 x 1080
+    res_3_button = Button("1920 x 1080", font2, res_2_button.start_height + res_1_button.height + 30, screen_width)
+
+    # 2560 x 1440
+    res_4_button = Button("2560 x 1440", font2, res_3_button.start_height + res_1_button.height + 30, screen_width)
+
     while resolutions:
         events = pg.event.get()
-        mouse = pg.mouse.get_pos()
 
-        screen.fill(white)
-
-        # Menu Title
-
-        restitle = font.render("Select a Resolution", False, black)
-        restitle_rect = restitle.get_rect()
-        restitle_rect.center = ((screen_width / 2), (screen_height / 4))
-
-        # Fullscreen Toggle Button
-
-        if fullscreen:
-            fullscrnbuttontext = "Toggle Fullscreen: ON"
-        else:
-            fullscrnbuttontext = "Toggle Fullscreen: OFF"
-        fullscrnbutton, fullscrn_sur, fullscrn_rect = utils.create_button(fullscrnbuttontext, (screen_height / 4 +
-                                                                           restitle.get_rect().height + 70),
-                                                           font2, screen_width)
-
-        # 600 x 600
-
-        res_1_buttontext = "600 x 600"
-        res_1_button, res_1_sur, res_1_rect = utils.create_button(res_1_buttontext, (fullscrnbutton.center[1] +
-                                                                                       fullscrnbutton.height), font2,
-                                                                    screen_width)
-
-        # 1280 x 720
-
-        # button functions
-
-        pressed = key_listener.menuchecks(events)
-
-        if pressed == "leftclick":
-            if fullscrnbutton.collidepoint(mouse[0], mouse[1]):
-                if fullscreen:
-                    fullscreen = False
-                else:
-                    fullscreen = True
-                return
-            if res_1_button.collidepoint(mouse[0], mouse[1]):
-                screen_width = 600
-                screen_height = 600
-                return
-        elif pressed == "escape":
+        if key_listener.menuchecks(events) == "escape":
             settings_loop()
             return
+        if fullscrnbutton.is_clicked(events):
+            if fullscreen:
+                fullscreen = False
+                screen = pg.display.set_mode((screen_width, screen_height))
+                fullscrnbutton.button_text = "Toggle Fullscreen: OFF"
+                fullscrnbutton.update()
+                pg.time.wait(2000)
+            else:
+                fullscreen = True
+                screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
+                fullscrnbutton.button_text = "Toggle Fullscreen: ON"
+                fullscrnbutton.update()
+                pg.time.wait(2000)
+        if res_1_button.is_clicked(events):
+            screen_width = 600
+            screen_height = 600
+            if fullscreen:
+                screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
+            else:
+                screen = pg.display.set_mode((screen_width, screen_height))
+        if res_2_button.is_clicked(events):
+            screen_width = 1280
+            screen_height = 720
+            if fullscreen:
+                screen = pg.display.set_mode((screen_width, screen_height), pg.FULLSCREEN)
+            else:
+                screen = pg.display.set_mode((screen_width, screen_height))
+
+
+        screen.fill(white)
+        screen.blit(restitle, restitle_rect)
+        fullscrnbutton.draw(screen)
+        res_1_button.draw(screen)
+        res_2_button.draw(screen)
+
+        pg.display.update()
 
 
 def game_loop():
