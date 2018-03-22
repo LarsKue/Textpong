@@ -32,7 +32,7 @@ blue = (0, 0, 255)
 buttonhover = (50, 50, 50)
 
 # Maximum concurrent balls, set 0 for no limit
-max_balls = 300
+max_balls = 0
 
 player_img_path = "resources/BouncePads/default.png"
 ball_img_path = "resources/Balls/default.png"
@@ -389,7 +389,6 @@ def pause_menu():
             balls_list = []
             menu_loop()
             return
-
 
         screen.blit(pausetitle, pausetitle_rect)
         playbutton.draw(screen)
