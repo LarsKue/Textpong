@@ -9,11 +9,18 @@ import pygame as pg
 
 
 class Button:
-    def __init__(self, text, font, start_height, screen_width):
+    def __init__(self, text, font, top, space, align=True):
+        # If align, then top is a rect and space the space from the rect to this button
+        # Else top is the top of this button and space the y value of the middle of this button
+        if align:
+            self.top = top.bottom + space
+            self.middle_x = top.center[0]
+        else:
+            self.top = top
+            self.middle_x = space
+
         self.text = text
         self.font = font
-        self.start_height = start_height
-        self.screen_width = screen_width
         self.width = 325
         self.height = 100
         self.text_color = [255, 255, 255]
@@ -21,19 +28,30 @@ class Button:
         self.box_color = [0, 0, 0]
         self.box_hover_color = [50, 50, 50]
 
-        self.button_obj = None
+        self.button_rect = None
         self.button_text_obj = None
         self.button_text_rect = None
 
         self.update()
 
+    def get_rect(self):
+        return self.button_rect
+
+    def update(self):
+        self.button_rect = pg.Rect(0, 0, self.width, self.height)
+        self.button_rect.center = (self.middle_x, self.top + self.height / 2)
+
+        self.button_text_obj = self.font.render(self.text, False, self.text_color)
+        self.button_text_rect = self.button_text_obj.get_rect()
+        self.button_text_rect.center = self.button_rect.center
+
     def draw(self, screen):
         # Draw box
         if self.hovering():
-            pg.draw.rect(screen, self.box_hover_color, self.button_obj)
+            pg.draw.rect(screen, self.box_hover_color, self.button_rect)
             self.button_text_obj = self.font.render(self.text, False, self.text_hover_color)
         else:
-            pg.draw.rect(screen, self.box_color, self.button_obj)
+            pg.draw.rect(screen, self.box_color, self.button_rect)
             self.button_text_obj = self.font.render(self.text, False, self.text_color)
 
         # Draw text
@@ -49,12 +67,4 @@ class Button:
 
     def hovering(self):
         mouse = pg.mouse.get_pos()
-        return self.button_obj.collidepoint(mouse[0], mouse[1])
-
-    def update(self):
-        self.button_obj = pg.Rect(0, 0, self.width, self.height)
-        self.button_obj.center = (self.screen_width / 2, self.start_height)
-
-        self.button_text_obj = self.font.render(self.text, False, self.text_color)
-        self.button_text_rect = self.button_text_obj.get_rect()
-        self.button_text_rect.center = self.button_obj.center
+        return self.button_rect.collidepoint(mouse[0], mouse[1])

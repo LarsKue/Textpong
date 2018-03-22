@@ -11,13 +11,15 @@ import os
 from player import Player
 from ball import Ball
 from button import Button
+from text import Text
 
 # window and general game settings
-screen_width = 1400
-screen_height = 800
+screen_width = 1280
+screen_height = 720
 fullscreen = False
 # causes lag if above ~ 300, default: 144
 tickrate = 144
+tickrate_menu = 30
 # default: 720
 player_speed = 720
 box_size = 30
@@ -29,7 +31,8 @@ white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
-buttonhover = (50, 50, 50)
+grey = (50, 50, 50)
+light_grey = (100, 100, 100)
 
 # Maximum concurrent balls, set 0 for no limit
 max_balls = 0
@@ -131,14 +134,12 @@ def menu_loop():
     pg.mouse.set_visible(True)
     menu = True
 
-    menutitle = font.render("Main Menu", False, black)
-    menutitle_rect = menutitle.get_rect()
-    menutitle_rect.center = ((screen_width/2), (screen_height / 4))
+    menutitle = Text("Main Menu", font, black, (screen_width / 2), (screen_height / 8))
 
-    playbutton = Button("Play", font2, (screen_height / 4 + menutitle.get_rect().height + 70), screen_width)
-    modebutton = Button("Modes", font2, (playbutton.start_height + playbutton.height + 30), screen_width)
-    settingsbutton = Button("Settings", font2, (modebutton.start_height + modebutton.height + 30), screen_width)
-    exitbutton = Button("Exit", font2, (settingsbutton.start_height + settingsbutton.height + 30), screen_width)
+    playbutton = Button("Play", font2, menutitle.get_rect(), 30)
+    modebutton = Button("Modes", font2, playbutton.get_rect(), 30)
+    settingsbutton = Button("Settings", font2, modebutton.get_rect(), 30)
+    exitbutton = Button("Exit", font2, settingsbutton.get_rect(), 30)
     i = 0
 
     while menu:
@@ -166,7 +167,7 @@ def menu_loop():
 
         # drawing menu title and button texts
         screen.fill(white)
-        screen.blit(menutitle, menutitle_rect)
+        menutitle.draw(screen)
         playbutton.draw(screen)
         modebutton.draw(screen)
         settingsbutton.draw(screen)
@@ -174,22 +175,18 @@ def menu_loop():
 
         pg.display.update()
 
-    # menu tickrate
-    # default: 30
-    clock.tick(30)
+        clock.tick(tickrate_menu)
 
 
 def settings_loop():
     settings = True
 
     # creating submenu title
-    settingstitle = font.render("Settings", False, black)
-    settingstitle_rect = settingstitle.get_rect()
-    settingstitle_rect.center = ((screen_width / 2), (screen_height / 4))
+    settingstitle = Text("Settings", font, black, screen_width / 2, screen_height / 4)
 
     # creating buttons
-    resbutton = Button("Resolution", font2, (screen_height / 4 + settingstitle.get_rect().height + 70), screen_width)
-    returnbutton = Button("Return", font2, (resbutton.start_height + resbutton.height + 30), screen_width)
+    resbutton = Button("Resolution", font2, settingstitle.get_rect(), 30)
+    returnbutton = Button("Return", font2, resbutton.get_rect(), 30)
 
     while settings:
         events = pg.event.get()
@@ -206,10 +203,11 @@ def settings_loop():
 
         # drawing buttons
         screen.fill(white)
-        screen.blit(settingstitle, settingstitle_rect)
+        settingstitle.draw(screen)
         resbutton.draw(screen)
 
         pg.display.update()
+        clock.tick(tickrate_menu)
 
 
 def resolutions_loop():
@@ -217,14 +215,10 @@ def resolutions_loop():
     resolutions = True
 
     # creating submenu title
-    restitle = font.render("Select a Resolution", False, black)
-    restitle_rect = restitle.get_rect()
-    restitle_rect.center = ((screen_width / 2), (screen_height / 15))
+    restitle = Text("Select a Resolution", font, black, screen_width / 2, screen_height / 15)
 
     # creating fullscreen toggle button
-    fullscrnbutton = Button("Toggle Fullscreen: OFF", font2,
-                            (restitle_rect.center[1] + restitle.get_rect().height + 70),
-                            screen_width)
+    fullscrnbutton = Button("Toggle Fullscreen: OFF", font2, restitle.get_rect(), 30)
     if fullscreen:
         fullscrnbutton.text = "Toggle Fullscreen: ON"
 
@@ -233,16 +227,16 @@ def resolutions_loop():
 
     # creating resolution buttons
     # 600 x 600
-    res_1_button = Button("600 x 600", font2, fullscrnbutton.start_height + fullscrnbutton.height + 30, screen_width)
+    res_1_button = Button("600 x 600", font2, fullscrnbutton.get_rect(), 30)
 
     # 1280 x 720
-    res_2_button = Button("1280 x 720", font2, res_1_button.start_height + res_1_button.height + 30, screen_width)
+    res_2_button = Button("1280 x 720", font2, res_1_button.get_rect(), 30)
 
     # 1920 x 1080
-    res_3_button = Button("1920 x 1080", font2, res_2_button.start_height + res_1_button.height + 30, screen_width)
+    res_3_button = Button("1920 x 1080", font2, res_2_button.get_rect(), 30)
 
     # 2560 x 1440
-    res_4_button = Button("2560 x 1440", font2, res_3_button.start_height + res_1_button.height + 30, screen_width)
+    res_4_button = Button("2560 x 1440", font2, res_3_button.get_rect(), 30)
 
     while resolutions:
         events = pg.event.get()
@@ -279,7 +273,7 @@ def resolutions_loop():
             return
 
         screen.fill(white)
-        screen.blit(restitle, restitle_rect)
+        restitle.draw(screen)
         fullscrnbutton.draw(screen)
         res_1_button.draw(screen)
         res_2_button.draw(screen)
@@ -287,12 +281,22 @@ def resolutions_loop():
         res_4_button.draw(screen)
 
         pg.display.update()
+        clock.tick(tickrate_menu)
 
 
 def game_loop():
     if fullscreen:
         pg.mouse.set_visible(False)
-    # loop for as long as running is true
+
+    timer_font = pg.font.Font(font_path, 100)
+    timer_1 = Text("1", timer_font, white, screen_width / 2, screen_height / 3)
+    timer_2 = Text("2", timer_font, white, screen_width / 2, screen_height / 3)
+    timer_3 = Text("3", timer_font, white, screen_width / 2, screen_height / 3)
+    start_size = 25
+    end_size = 110
+    size_diff = end_size - start_size
+
+    new_game_timer = 3 * tickrate
     running = True
     while running:
         events = pg.event.get()
@@ -301,11 +305,12 @@ def game_loop():
             return
 
         # Positions and collisions
-        positioning(p1)
-        positioning(p2)
-        for ball in balls_list:
-            ball_positioning(ball)
-            check_collision(ball, p1, p2)
+        if new_game_timer <= 0:
+            positioning(p1)
+            positioning(p2)
+            for ball in balls_list:
+                ball_positioning(ball)
+                check_collision(ball, p1, p2)
 
         # Update score
         global score_p1, score_p2
@@ -338,30 +343,50 @@ def game_loop():
         screen.blit(name_p1, (3, 3))
         screen.blit(name_p2, (screen_width - name_p2.get_rect().width - 3, 3))
 
+        # Render timer
+        if new_game_timer > 0:
+            if new_game_timer <= tickrate:
+                # Scale timer
+                size = int(round(start_size + size_diff - (new_game_timer / tickrate * size_diff)))
+                timer_font2 = pg.font.Font(font_path, size)
+                timer_1.set_font(timer_font2)
+                timer_1.draw(screen)
+            elif new_game_timer <= tickrate * 2:
+                size = int(round(start_size + size_diff - ((new_game_timer - tickrate) / tickrate * size_diff)))
+                timer_font2 = pg.font.Font(font_path, size)
+                timer_2.set_font(timer_font2)
+                timer_2.draw(screen)
+            elif new_game_timer <= tickrate * 3:
+                size = int(round(start_size + size_diff - ((new_game_timer - tickrate * 2) / tickrate * size_diff)))
+                timer_font2 = pg.font.Font(font_path, size)
+                timer_3.set_font(timer_font2)
+                timer_3.draw(screen)
+            new_game_timer -= 1
+
         # update the screen
         pg.display.update()
 
         # game update rate
         clock.tick(tickrate)
 
-        # menu_loop()
-
 
 def pause_menu():
     pg.mouse.set_visible(True)
 
-    pausetitle = font.render("Pause", False, white)
-    pausetitle_rect = pausetitle.get_rect()
-    pausetitle_rect.center = ((screen_width/2), (screen_height / 4))
+    pausetitle = Text("Pause", font, white, screen_width / 2, screen_height / 4)
 
-    playbutton = Button("Continue", font2, (screen_height / 4 + pausetitle.get_rect().height + 70), screen_width)
-    playbutton.box_color = white
-    playbutton.text_color = black
+    playbutton = Button("Continue", font2, pausetitle.get_rect(), 30)
+    playbutton.box_color = light_grey
+    playbutton.box_hover_color = white
+    playbutton.text_color = white
+    playbutton.text_hover_color = black
     playbutton.update()
-    exitbutton = Button("Exit", font2, (playbutton.start_height + playbutton.height + 30), screen_width)
-    exitbutton.box_color = white
-    exitbutton.text_color = black
-    playbutton.update()
+    exitbutton = Button("Exit", font2, playbutton.get_rect(), 30)
+    exitbutton.box_color = light_grey
+    exitbutton.box_hover_color = white
+    exitbutton.text_color = white
+    exitbutton.text_hover_color = black
+    exitbutton.update()
 
     background = pg.Surface([screen_width, screen_height])
     background.fill((0, 0, 0))
@@ -386,18 +411,16 @@ def pause_menu():
             game_loop()
             return
         if exitbutton.is_clicked(events):
-            balls_list = []
             menu_loop()
             return
 
-        screen.blit(pausetitle, pausetitle_rect)
+        pausetitle.draw(screen)
         playbutton.draw(screen)
         exitbutton.draw(screen)
         pg.display.update()
 
         # menu tickrate
-        # default: 60
-        clock.tick(30)
+        clock.tick(tickrate_menu)
 
 
 def positioning(player):
@@ -414,20 +437,18 @@ def positioning(player):
 
 
 def ball_positioning(ball):
-    ball.get_pos()[0] += ball.get_vel()[0] * ball.get_speed() / tickrate
-    ball.get_pos()[1] += ball.get_vel()[1] * ball.get_speed() / tickrate
+    ball.get_pos()[0] += ball.get_velocity()[0] / tickrate
+    ball.get_pos()[1] += ball.get_velocity()[1] / tickrate
     if ball.get_pos()[1] < 0 or ball.get_pos()[1] > (screen_height - b_height):
         ball.get_vel()[1] = - ball.get_vel()[1]
     if ball.get_pos()[0] <= 0:
         p2.score += 1
-        ball.set_pos(ball_startpos)
-        ball.set_random_vel()
+        ball.reset()
         if len(balls_list) < max_balls or max_balls == 0:
             balls_list.append(Ball(ball_startpos))
     if ball.get_pos()[0] >= screen_width:
         p1.score += 1
-        ball.set_pos(ball_startpos)
-        ball.set_random_vel()
+        ball.reset()
         if len(balls_list) < max_balls or max_balls == 0:
             balls_list.append(Ball(ball_startpos))
 
@@ -461,6 +482,7 @@ def handle_collision(ball, ball_rect, p_rect):
     ball_positioning(ball)
 
     ball.set_colliding(True)
+    ball.just_spawned = False
 
 
 def start_new_game():

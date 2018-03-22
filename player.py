@@ -11,11 +11,11 @@ class Player:
     def __init__(self, name, human, pos):
         self.name = name
         self.human = human
-        self.pos = pos
+        self.pos = [pos[0], pos[1]]
         self.keys = [False, False]
         self.size = 1
         self.score = 0
-        self.startpos = pos
+        self.startpos = [pos[0], pos[1]]
 
     def set_name(self, name):
         self.name = name
@@ -36,7 +36,7 @@ class Player:
         return self.pos
 
     def reset(self):
-        self.pos = self.startpos
+        self.pos = [self.startpos[0], self.startpos[1]]
         self.keys = [False, False]
         self.size = 1
         self.score = 0
