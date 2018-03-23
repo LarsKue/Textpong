@@ -8,6 +8,7 @@ import pygame as pg
 import utils
 import key_listener
 import os
+import numpy as np
 from player import Player
 from ball import Ball
 from button import Button
@@ -24,6 +25,8 @@ tickrate_menu = 30
 player_speed = 720
 box_size = 30
 
+# Modi
+multiball = True
 
 # useful colours
 black = (0, 0, 0)
@@ -35,7 +38,7 @@ grey = (50, 50, 50)
 light_grey = (100, 100, 100)
 
 # Maximum concurrent balls, set 0 for no limit
-max_balls = 0
+max_balls = 500
 
 player_img_path = "resources/BouncePads/default.png"
 ball_img_path = "resources/Balls/default.png"
@@ -444,12 +447,12 @@ def ball_positioning(ball):
     if ball.get_pos()[0] <= 0:
         p2.score += 1
         ball.reset()
-        if len(balls_list) < max_balls or max_balls == 0:
+        if multiball and len(balls_list) < max_balls or max_balls == 0:
             balls_list.append(Ball(ball_startpos))
     if ball.get_pos()[0] >= screen_width:
         p1.score += 1
         ball.reset()
-        if len(balls_list) < max_balls or max_balls == 0:
+        if multiball and len(balls_list) < max_balls or max_balls == 0:
             balls_list.append(Ball(ball_startpos))
 
 
@@ -474,9 +477,35 @@ def handle_collision(ball, ball_rect, p_rect):
 
     clipping_rect = pg.Rect.clip(ball_rect, p_rect)
 
+    # Check for wrong collisions and change directory on collision
     if clipping_rect.width <= clipping_rect.height:
-        ball.get_vel()[0] = - ball.get_vel()[0]
+        if p_rect.center[0] < clipping_rect.center[0] and ball.get_vel()[0] > 0:
+            return
+        elif p_rect.center[0] > clipping_rect.center[0] and ball.get_vel()[0] < 0:
+            return
+
+        # Calculate bounce back
+        cur_dist = p_rect.center[1] - ball_rect.center[1]
+        max_dist = (p_rect.height + ball_rect.height) / 2
+
+        modx = 1
+        mody = 1
+        if ball.get_vel()[0] > 0:
+            modx = -1
+        if cur_dist > 0:
+            mody = -1
+
+        x = ((1 - abs(cur_dist) / max_dist) * 0.5 + 0.5) * modx
+        y = np.sqrt(1 - abs(x) ** 2) * mody
+
+        ball.get_vel()[0] = x
+        ball.get_vel()[1] = y
+
     else:
+        if p_rect.center[1] < clipping_rect.center[1] and ball.get_vel()[1] > 0:
+            return
+        elif p_rect.center[1] > clipping_rect.center[1] and ball.get_vel()[1] < 0:
+            return
         ball.get_vel()[1] = - ball.get_vel()[1]
 
     ball_positioning(ball)
